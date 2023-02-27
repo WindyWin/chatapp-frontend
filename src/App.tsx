@@ -1,23 +1,22 @@
-import React from "react";
+import { Skeleton } from "@mui/material";
+import { StrictMode, Suspense } from "react";
 import ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Layout from "./layout/Layout";
-import { Home, Login, NotFound } from "./page";
+import { ErrorBoundary } from "react-error-boundary";
+import { RouterProvider } from "react-router-dom";
+import ErrorFallback from "./component/ui/ErrorFallback";
+import router from "./modules/router";
+import "./_reset.css";
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Layout />,
-  },
-
-  {
-    path: "*",
-    element: <NotFound />,
-  }
-]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <RouterProvider router={router}></RouterProvider>
-  </React.StrictMode>
+  <StrictMode>
+    <ErrorBoundary
+      fallback={<ErrorFallback />}
+      onReset={() => window.location.reload()}
+    >
+      <Suspense fallback={<Skeleton />}>
+        <RouterProvider router={router}></RouterProvider>
+      </Suspense>
+    </ErrorBoundary>
+  </StrictMode>
 );
