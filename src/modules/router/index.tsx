@@ -23,17 +23,17 @@ const router = createBrowserRouter([
             element: <div>"conversation"</div>
           }
         ]
-      },
-      {
-        path: "/login",
-        element: <Login />
-      },
-      {
-        path: "/register",
-        element: <Login />
       }]
-  },
 
+  },
+  {
+    path: "/login",
+    element: <Login mode="Login" />
+  },
+  {
+    path: "/register",
+    element: <Login mode="Register" />
+  },
   {
     path: "*",
     element: <NotFound />,

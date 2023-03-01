@@ -1,4 +1,4 @@
-import { conversation } from "../../modules/types/intex"
+import { conversation } from "../../modules/types"
 import StyledConveration from "./StyledConversation"
 
 

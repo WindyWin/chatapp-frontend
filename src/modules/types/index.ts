@@ -1,11 +1,12 @@
 export interface user {
-    _id: String;
-    avatar: String;
-    username: String;
+    _id: String | null;
+    avatar: String | null;
+    username: String | null;
     email: String | undefined | null;
     password: String | undefined | null;
     status: String | undefined | null;
     lastActive: Date | undefined | null;
+    // refreshToken: String | undefined | null;
     friendList: user[];
     blockList: user[]
 }

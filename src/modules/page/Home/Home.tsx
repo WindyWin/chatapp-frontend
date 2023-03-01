@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import ConversationSection from "../../../component/core/ConversationSection";
-import { conversation } from "../../types/intex";
+import { conversation } from "../../types";
 import HomeContainer from "./StyledHome";
 const exampleConverations: conversation[] = [{
   _id: "1",

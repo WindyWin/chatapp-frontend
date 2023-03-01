@@ -10,11 +10,16 @@ import "./_reset.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <StrictMode>
+
+
     <ErrorBoundary
+      //when error, show ErrorFallback component
       fallback={<ErrorFallback />}
       onReset={() => window.location.reload()}
     >
-      <Suspense fallback={<Skeleton />}>
+      <Suspense
+        //when loading show Skeleton component
+        fallback={<Skeleton />}>
         <RouterProvider router={router}></RouterProvider>
       </Suspense>
     </ErrorBoundary>
