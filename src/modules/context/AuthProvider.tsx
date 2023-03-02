@@ -3,7 +3,6 @@ import { getAuth, User } from 'firebase/auth';
 import { createContext, useEffect, useState, type Dispatch } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { user } from '../types';
-
 const INITIAL_USER = {
     user: {},
     setUser: ((user: User) => { }) as Dispatch<any>,
@@ -14,7 +13,7 @@ export const AuthContext = createContext(INITIAL_USER);
 export default function AuthProvider({ children }: any) {
     const [user, setUser] = useState({});
     const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState(true);
+    // const [isLoading, setIsLoading] = useState(true);
 
     const auth = getAuth();
 
@@ -24,7 +23,7 @@ export default function AuthProvider({ children }: any) {
             if (user?.uid) {
                 setUser(
                     {
-                        _id: user.uid,
+                        uid: user.uid,
                         email: user.email,
                         username: user.displayName,
                         avatar: user.photoURL,
@@ -36,16 +35,14 @@ export default function AuthProvider({ children }: any) {
                     });
                 if (user.refreshToken !== localStorage.getItem('refreshToken')) {
                     localStorage.setItem('refreshToken', user.refreshToken);
-                    window.location.reload();
+                    // window.location.reload();
                 }
-                setIsLoading(false);
                 return;
             }
 
             // reset user info
 
             console.log('reset');
-            setIsLoading(false);
             setUser({});
             localStorage.clear();
             navigate('/login');
@@ -59,7 +56,7 @@ export default function AuthProvider({ children }: any) {
 
     return (
         <AuthContext.Provider value={{ user, setUser }}>
-            {isLoading ? <CircularProgress /> : children}
+            {children}
         </AuthContext.Provider>
     );
 }

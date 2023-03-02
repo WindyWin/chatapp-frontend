@@ -4,14 +4,13 @@ import ReactDOM from "react-dom/client";
 import { ErrorBoundary } from "react-error-boundary";
 import { RouterProvider } from "react-router-dom";
 import ErrorFallback from "./component/ui/ErrorFallback";
+import "./firebase";
 import router from "./modules/router";
 import "./_reset.css";
 
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <StrictMode>
-
-
     <ErrorBoundary
       //when error, show ErrorFallback component
       fallback={<ErrorFallback />}
