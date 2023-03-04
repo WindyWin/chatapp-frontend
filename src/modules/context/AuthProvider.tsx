@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { user } from '../types';
 const INITIAL_USER = {
     user: {},
-    setUser: ((user: User) => { }) as Dispatch<any>,
+    setUser: ((user: any) => { }) as Dispatch<any>,
 };
 
 export const AuthContext = createContext(INITIAL_USER);
@@ -23,19 +23,12 @@ export default function AuthProvider({ children }: any) {
             if (user?.uid) {
                 setUser(
                     {
-                        uid: user.uid,
-                        email: user.email,
-                        username: user.displayName,
-                        avatar: user.photoURL,
-                        status: 'online',
-                        lastActive: null,
-                        password: null,
-                        friendList: [],
-                        blockList: [],
+                        ...user
                     });
-                if (user.refreshToken !== localStorage.getItem('refreshToken')) {
-                    localStorage.setItem('refreshToken', user.refreshToken);
-                    // window.location.reload();
+                //@ts-ignore 
+                if (user.accessToken !== localStorage.getItem('accessToken')) {
+                    localStorage.setItem('accessToken', user.accessToken);
+                    window.location.reload();
                 }
                 return;
             }

@@ -1,6 +1,6 @@
 export interface user {
-    _id: String | null;
-    avatar: String | null;
+    uid: String | null;
+    avatar: string | undefined;
     username: String | null;
     email: String | undefined | null;
     password: String | undefined | null;
