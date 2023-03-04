@@ -2,7 +2,7 @@ import { Children } from "react";
 import { createBrowserRouter, Outlet } from "react-router-dom";
 import ClientLayout from "../../component/layout";
 import AuthProvider from "../context/AuthProvider";
-import { Home, Login, NotFound } from "../page";
+import { Home, Login, NotFound, Register } from "../page";
 
 const AuthLayout = () => {
   return (
@@ -20,11 +20,11 @@ const router = createBrowserRouter([
 
       {
         path: "/login",
-        element: <Login mode="Login" />
+        element: <Login />
       },
       {
         path: "/register",
-        element: <Login mode="Register" />
+        element: <Register />
       },
       {
 
