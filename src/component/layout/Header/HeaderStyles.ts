@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { mainBgColor, subColor } from '../../../modules/constain/color';
+import { mainBgColor, subBgColor, subColor } from '../../../modules/constain/color';
 import { headerHeight } from '../../../modules/constain/itemSize';
 export const HeaderContainer = styled.header`
     display: flex;
@@ -26,10 +26,14 @@ export const HeaderContainer = styled.header`
     }
     .header__mid #Search-menu{
         position: absolute;
-        top: 60px;
+        top: 57px;
         left:0;
-        width:400px;
         background-color: ${mainBgColor};
+        max-height:400px;
+        width:100%;
+        overflow-y:hidden;
+        border:1px solid ${subBgColor};
+        border-top:none;
     }
     .header__right{
         margin-right: 3rem;

@@ -1,18 +1,41 @@
-import { CircularProgress } from '@mui/material';
-import { getAuth, User } from 'firebase/auth';
-import { createContext, useEffect, useState, type Dispatch } from 'react';
+import { getAuth } from 'firebase/auth';
+import { createContext, useEffect, useReducer, type Dispatch } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { user } from '../types';
+import { login } from '../../service/userService';
 const INITIAL_USER = {
-    user: {},
-    setUser: ((user: any) => { }) as Dispatch<any>,
+    user: null,
+    dispatchUser: (() => { }) as Dispatch<any>,
+};
+
+
+const userReducer = (state: any, action: any) => {
+    switch (action.type) {
+        case 'LOGIN':
+            login({ email: action.email, password: action.password }).then((res) => {
+                const username = res.data.username;
+                return { ...state, username }
+            }).catch((err) => {
+                console.error(err);
+            })
+        case 'LOGOUT':
+
+            return null;
+        case 'SET_USERNAME':
+
+            return { ...state, username: action.username }
+        case "SET_USER":
+            return { ...state, ...action.user }
+        default:
+            return state;
+    }
 };
 
 export const AuthContext = createContext(INITIAL_USER);
 
 export default function AuthProvider({ children }: any) {
-    const [user, setUser] = useState({});
+    const [user, dispatchUser] = useReducer(userReducer, INITIAL_USER);
     const navigate = useNavigate();
+
     // const [isLoading, setIsLoading] = useState(true);
 
     const auth = getAuth();
@@ -21,12 +44,10 @@ export default function AuthProvider({ children }: any) {
         const unsubcribed = auth.onIdTokenChanged((user) => {
             console.log('[From AuthProvider]', { user });
             if (user?.uid) {
-                setUser(
-                    {
-                        ...user
-                    });
+                dispatchUser({ type: "SET_USER", user: user });
                 //@ts-ignore 
                 if (user.accessToken !== localStorage.getItem('accessToken')) {
+                    //@ts-ignore
                     localStorage.setItem('accessToken', user.accessToken);
                     window.location.reload();
                 }
@@ -36,7 +57,7 @@ export default function AuthProvider({ children }: any) {
             // reset user info
 
             console.log('reset');
-            setUser({});
+            dispatchUser({ type: "SET_USER", user: null });
             localStorage.clear();
             navigate('/login');
         });
@@ -48,7 +69,7 @@ export default function AuthProvider({ children }: any) {
     }, [auth]);
 
     return (
-        <AuthContext.Provider value={{ user, setUser }}>
+        <AuthContext.Provider value={{ user, dispatchUser }}>
             {children}
         </AuthContext.Provider>
     );

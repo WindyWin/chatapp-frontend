@@ -1,4 +1,4 @@
-import { Autocomplete, Avatar, Box, Button, CircularProgress, List, ListItem, Menu, MenuItem, TextField } from "@mui/material";
+import { Autocomplete, Avatar, Box, Button, CircularProgress, List, ListItem, Menu, MenuItem, TextField, Typography } from "@mui/material";
 import { MouseEvent, useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../../modules/context/AuthProvider";
@@ -11,7 +11,7 @@ import { HeaderContainer } from "./HeaderStyles";
 
 
 function Header() {
-  const { user, setUser } = useContext(AuthContext);
+  const { user, dispatchUser } = useContext(AuthContext);
   const [searchValue, setSearchValue] = useState('');
   const [searchResult, setSearchResult] = useState<user[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -50,6 +50,34 @@ function Header() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const SearchResultPopup = () => (
+    <Box id="Search-menu"
+      hidden={!openSearchMenu}
+    >
+      <List >
+        {loading.search ? (
+          <>
+            <ListItem>
+              <CircularProgress size={20} />
+            </ListItem>
+          </>)
+          :
+          <>
+            {searchResult.length === 0 ? <ListItem ><Typography>No result match keyword</Typography></ListItem> :
+              <>{
+                searchResult.map((user, index) =>
+                  <ListItem key={index}><UserSearchItem user={user} /></ListItem>
+                )
+              }
+              </>
+            }
+          </>
+        }
+      </List>
+    </Box>
+  )
+
   return (
     <HeaderContainer>
       <div className="header__left">
@@ -75,21 +103,7 @@ function Header() {
           size="small"
         // sx={{ p: '9px' }}
         />
-        <Box id="Search-menu"
-          hidden={!openSearchMenu}
-        >
-          <List>
-            {loading.search ? (
-              <>
-                <ListItem>
-                  <CircularProgress size={20} />
-                </ListItem>
-              </>)
-              :
-              <>{searchResult.map((user, index) => <ListItem key={index}><UserSearchItem user={user} /></ListItem>)}</>
-            }
-          </List>
-        </Box>
+        <SearchResultPopup />
       </div>
       <div className="header__right">
         <div className="btn-container" >

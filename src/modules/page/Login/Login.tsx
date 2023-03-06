@@ -17,7 +17,7 @@ function Login() {
 
 
     const auth = getAuth();
-    const { user, setUser } = useContext(AuthContext);
+    const { user, dispatchUser } = useContext(AuthContext);
     const navigate = useNavigate();
     const emailRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
@@ -38,8 +38,15 @@ function Login() {
 
         checkExistUser({ email }).then((res) => {
             if (!res.data) {
-                //@ts-expect-error
-                register({ uid, email, password: "123456", username: `gUser${faker.internet.userName()}${faker.random.numeric(2)}` })
+                register(
+                    {
+                        //@ts-expect-error
+                        uid, email, password: "123456",
+                        username: `gUser${faker.internet.userName()}${faker.random.numeric(2)}`
+                    })
+                    .then((res) => {
+                        //@ts-ignore
+                    })
             }
         })
             .catch(
@@ -48,6 +55,8 @@ function Login() {
                 }
             )
         // navigate("/");
+        dispatchUser({ type: "LOGIN", email, password: "123456" })
+        console.log(user)
     }
     const handleLogin = async (e: BaseSyntheticEvent) => {
         const provider = new EmailAuthProvider();
@@ -61,10 +70,8 @@ function Login() {
 
 
         signInWithEmailAndPassword(auth, account.email, account.password).then(async (userCredential) => {
-            login({ ...account }).then((res) => {
-                console.log(res);
-                setUser({ res })
-            });
+            // Signed in
+            dispatchUser({ type: "LOGIN", ...account })
             // navigate("/");
         }, (error) => {
             if (error.code === "auth/wrong-password")
