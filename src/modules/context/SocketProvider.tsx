@@ -11,15 +11,19 @@ const SocketProvider = ({ children }: any) => {
 
     useEffect(
         () => {
+            // user can't null becasue we have a private route
+            // @ts-ignore
             if (user.uid) {
                 // const newSocket = new Manager("http://localhost:8080", {
                 //     auth: { userId: user.uid },
                 // });
                 const newSocket = io("http://localhost:8080", {
+                    // @ts-ignore
                     auth: { userId: user.uid },
                 });
 
                 setSocket(newSocket);
+                // @ts-ignore
                 newSocket.emit("online", user.uid);
                 return () => {
                     newSocket.close();

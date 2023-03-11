@@ -1,19 +1,27 @@
 import { Children } from "react";
 import { createBrowserRouter, Outlet } from "react-router-dom";
-import ClientLayout from "../../component/layout";
+import Layout from "../../component/layout";
 import AuthProvider from "../context/AuthProvider";
+import { ConversationProvider } from "../context/ConversationProvider";
 import { SocketProvider } from "../context/SocketProvider";
 import { Conversation, Home, Login, NotFound, Profile, Register } from "../page";
 
 const AuthLayout = () => {
   return (
     <AuthProvider>
-
       <Outlet />
     </AuthProvider >
   )
 }
-
+const ClientLayout = () => {
+  return (
+    <SocketProvider>
+      {/* <ConversationProvider> */}
+      <Layout />
+      {/* </ConversationProvider> */}
+    </SocketProvider>
+  )
+}
 const router = createBrowserRouter([
   {
     element: <AuthLayout />,
@@ -30,13 +38,11 @@ const router = createBrowserRouter([
       },
       {
 
-        element: <SocketProvider><ClientLayout /></SocketProvider>,
+        element: <ClientLayout />,
         children: [
           {
             path: "/",
             element: <Home />,
-
-
           },
           {
             path: "/conversation/:conversationId",

@@ -17,12 +17,9 @@ const UserSearchItemStyle = styled.div`
 `
 
 function UserSearchItem({ user }: { user: user }) {
-    const navigate = useNavigate();
-    const handleClick = () => {
-        navigate(`/user/${user.uid}`)
-    }
+
     return (
-        <UserSearchItemStyle className="user-search-item" onClick={handleClick} >
+        <UserSearchItemStyle className="user-search-item" >
 
             <Avatar src={user.avatar} ></Avatar>
             <div className="item-info">

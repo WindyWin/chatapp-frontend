@@ -3,6 +3,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import styled from "styled-components";
 import { headerHeight } from "../../modules/constain/itemSize";
 import ConversationContainer from "../core/ConversationContainer";
+import CreateConversation from "../form/CreateConversation";
 import Footer from "./Footer/Footer";
 import Header from "./Header/Header";
 
@@ -11,7 +12,7 @@ const Main = styled.main`
   height: calc(100vh - ${headerHeight}px);
 `
 
-function ClientLayout() {
+function Layout() {
 
   if (!localStorage.getItem('accessToken')) {
     return <Navigate to='/login' />;
@@ -23,6 +24,7 @@ function ClientLayout() {
       <Grid container sx={{ height: 1 }} >
         <Grid item xs={3}>
           <ConversationContainer></ConversationContainer>
+
         </Grid>
         <Grid item xs={7}>
           <Outlet />
@@ -37,4 +39,4 @@ function ClientLayout() {
   </div>
 
 }
-export default ClientLayout;
+export default Layout;

@@ -3,7 +3,7 @@ import { createContext, useEffect, useReducer, type Dispatch } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../service/userService';
 const INITIAL_USER = {
-    user: null,
+    user: {},
     dispatchUser: (() => { }) as Dispatch<any>,
 };
 
@@ -42,13 +42,14 @@ export default function AuthProvider({ children }: any) {
 
     useEffect(() => {
         const unsubcribed = auth.onIdTokenChanged((user) => {
-            console.log('[From AuthProvider]', { user });
             if (user?.uid) {
                 dispatchUser({ type: "SET_USER", user: user });
+                console.log('[From AuthProvider]', user.uid);
                 //@ts-ignore 
                 if (user.accessToken !== localStorage.getItem('accessToken')) {
                     //@ts-ignore
                     localStorage.setItem('accessToken', user.accessToken);
+                    console.log('reload');
                     window.location.reload();
                 }
                 return;

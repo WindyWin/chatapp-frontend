@@ -1,6 +1,6 @@
 import { Autocomplete, Avatar, Box, Button, CircularProgress, List, ListItem, Menu, MenuItem, TextField, Typography } from "@mui/material";
 import { MouseEvent, useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../modules/context/AuthProvider";
 import useDebounce from "../../../modules/hook/useDebounce";
 import { user } from "../../../modules/types";
@@ -11,6 +11,7 @@ import { HeaderContainer } from "./HeaderStyles";
 
 
 function Header() {
+  const navigate = useNavigate();
   const { user, dispatchUser } = useContext(AuthContext);
   const [searchValue, setSearchValue] = useState('');
   const [searchResult, setSearchResult] = useState<user[]>([]);
@@ -44,6 +45,8 @@ function Header() {
   }
 
 
+
+
   const setAnchoEl = (event: any) => {
     setAnchorEl(event.currentTarget);
   };
@@ -67,7 +70,11 @@ function Header() {
             {searchResult.length === 0 ? <ListItem ><Typography>No result match keyword</Typography></ListItem> :
               <>{
                 searchResult.map((user, index) =>
-                  <ListItem key={index}><UserSearchItem user={user} /></ListItem>
+                  <ListItem key={index} onClick={() => { navigate(`/user/${user.username}`) }}>
+                    <UserSearchItem
+                      user={user}
+                    />
+                  </ListItem>
                 )
               }
               </>
@@ -131,4 +138,4 @@ function Header() {
   );
 }
 
-export default Header;
+export default Header

@@ -1,14 +1,15 @@
 export interface user {
-    uid: String | null;
-    avatar: string | undefined;
-    username: String | null;
-    email: String | undefined | null;
-    password: String | undefined | null;
-    status: String | undefined | null;
-    lastActive: Date | undefined | null;
+    uid?: String;
+    avatar?: string;
+    username?: String;
+    email?: String;
+    password?: String;
+    status?: String;
+    lastActive?: Date;
     // refreshToken: String | undefined | null;
-    friendList: user[];
-    blockList: user[]
+    friendList?: user[];
+    blockList?: user[];
+    isConversationadmin?: boolean;
 }
 
 export interface message {
@@ -20,11 +21,12 @@ export interface message {
     conversation: String;
 }
 export interface conversation {
-    _id: String;
+    _id?: String;
     users: user[];
     name: String;
     image: String;
-    createTime: Date;
-    modifiedTime: Date;
+    createTime?: Date;
+    modifiedTime?: Date;
+    messages?: message[];
 }
 

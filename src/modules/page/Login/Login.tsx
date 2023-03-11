@@ -9,6 +9,7 @@ import { AuthContext } from "../../context/AuthProvider";
 import { LoginContainer } from "./Login.styled";
 
 
+
 function Login() {
 
     if (localStorage.getItem('accessToken')) {
@@ -88,7 +89,7 @@ function Login() {
             <Typography variant="h4">Login</Typography>
             <FormControl sx={{ padding: "0 1rem", width: 1, margin: "1rem 0" }}>
                 <InputLabel htmlFor="email" >Email</InputLabel>
-                <Input inputRef={emailRef} onChange={emailCheck} />
+                <Input inputRef={emailRef} onChange={emailCheck} data-invalid={error.email} />
                 <FormHelperText error hidden={!error.email} id="email-helper-text">Please type a valid email</FormHelperText>
             </FormControl>
             <FormControl sx={{ padding: "0 1rem", width: 1, margin: "1rem 0" }}>
