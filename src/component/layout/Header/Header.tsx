@@ -1,18 +1,20 @@
 import { Autocomplete, Avatar, Box, Button, CircularProgress, List, ListItem, Menu, MenuItem, TextField, Typography } from "@mui/material";
+import { getAuth } from "firebase/auth";
 import { MouseEvent, useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../../../modules/context/AuthProvider";
+import { useAppDispatch, useAppSelector } from "../../../modules/hook/reduxHook";
 import useDebounce from "../../../modules/hook/useDebounce";
+import { userSlice } from "../../../modules/redux/authSlice";
 import { user } from "../../../modules/types";
 import { searchUser } from "../../../service/userService";
 import UserSearchItem from "../../core/UserSearchItem";
 import { HeaderContainer } from "./HeaderStyles";
 
-
-
 function Header() {
+  const user = useAppSelector(state => state.user)
+  const dispatch = useAppDispatch()
+  const auth = getAuth()
   const navigate = useNavigate();
-  const { user, dispatchUser } = useContext(AuthContext);
   const [searchValue, setSearchValue] = useState('');
   const [searchResult, setSearchResult] = useState<user[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -41,7 +43,9 @@ function Header() {
 
   const logoutHandler = () => {
     //@ts-ignore
-    user.auth.signOut()
+    // user.auth.signOut()
+    auth.signOut()
+    dispatch(userSlice.actions.logOut)
   }
 
 

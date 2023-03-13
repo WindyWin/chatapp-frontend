@@ -1,24 +1,26 @@
-import { Button, FormControl, FormHelperText, IconButton, Input, InputAdornment, InputLabel, Typography } from "@mui/material";
-import { createUserWithEmailAndPassword, EmailAuthProvider, getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { Button, FormControl, FormHelperText, Input, InputLabel, Typography } from "@mui/material";
+import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useSnackbar } from "notistack";
-import { BaseSyntheticEvent, useContext, useEffect, useRef, useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { BaseSyntheticEvent, useEffect, useRef, useState } from "react";
+import { Link, Navigate } from "react-router-dom";
 import PasswordInput from "../../../component/form/PasswordInput";
 import { checkExistUser, register } from "../../../service/userService";
-import { AuthContext } from "../../context/AuthProvider";
+// import { AuthContext } from "../../context/AuthProvider";
+import { faker } from "@faker-js/faker";
+import { useAppDispatch } from "../../hook/reduxHook";
 import useDebounce from "../../hook/useDebounce";
-import { RegisterContainer } from "./RegisterSyle";
-
+import { userSlice } from "../../redux/authSlice";
+import { RegisterContainer } from "./RegisterStyle";
 
 
 
 function Register() {
-    const { enqueueSnackbar } = useSnackbar();
-
     if (localStorage.getItem('accessToken')) {
         return <Navigate to="/"></Navigate>
     }
 
+    const { enqueueSnackbar } = useSnackbar();
+    const dispatch = useAppDispatch();
 
     const auth = getAuth();
     // const user = useContext(AuthContext);
@@ -53,26 +55,20 @@ function Register() {
             })
 
     }, [debounced])
+
     const emailCheck = (e: BaseSyntheticEvent) => {
         setEmail(e.target.value)
         const emailRGEX = new RegExp("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
         setError({ ...error, email: !emailRGEX.test(debounced.email) ? "Please type a valid email" : "" })
-
-
     }
     const usernameCheck = (e: BaseSyntheticEvent) => {
         setUsername(e.target.value)
         const usernameRGEX = new RegExp("^[a-zA-Z0-9]{6,}$");
-
         setError({ ...error, username: !usernameRGEX.test(username) ? "Username must contain at least 6 character and not contain special character" : "" })
-
-
     }
     const passwordCheck = (e: BaseSyntheticEvent) => {
         const passwordRGEX = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
-
         setError({ ...error, password: !passwordRGEX.test(e.target.value) })
-
     }
     const confirmPasswordCheck = (e: BaseSyntheticEvent) => {
         setError({ ...error, confirmPassword: e.target.value !== passwordRef.current?.value })
@@ -80,14 +76,44 @@ function Register() {
 
     const handleLoginWithGoogle = async () => {
         const provider = new GoogleAuthProvider();
+        try {
 
-        const {
-            user: { uid, displayName }
-        } = await signInWithPopup(auth, provider);
-        console.table({ uid, displayName });
+            const {
+                user: { uid, displayName, email, }
+            } = await signInWithPopup(auth, provider);
+
+            if (!email) {
+                enqueueSnackbar("Fail to login with google", { variant: "error" })
+                return;
+            }
+
+            const check = await checkExistUser({ email })
+
+            // navigate("/");
+            if (!check.data) {
+                const res = await register({ uid, email, username: `gUser${faker.random.words(1)}${faker.random.numeric()}`, password: "123456" })
+                if (res.status === 200) {
+                    enqueueSnackbar("Login success", { variant: "success" })
+                    dispatch(userSlice.actions.setUsername(res.data.username))
+                }
+            }
+            //@ts-ignore
+            const res = await login({ email, password: "123456" })
+
+            if (res.status === 200) {
+                enqueueSnackbar("Login success", { variant: "success" })
+                dispatch(userSlice.actions.setUsername(res.data.username))
+                // navigate("/");
+            }
+        }
+        catch (err) {
+            console.error(err)
+            enqueueSnackbar("Fail to login with google", { variant: "error" })
+        }
     }
+
     const handleRegister = async (e: BaseSyntheticEvent) => {
-        const provider = new EmailAuthProvider();
+        // const provider = new EmailAuthProvider();
         e.preventDefault();
 
 
@@ -107,7 +133,6 @@ function Register() {
             }).then((res) => {
                 // console.log("register success")
                 // console.log(res)
-
                 enqueueSnackbar("register success!", { variant: 'success' });
             }).catch((err) => {
                 throw (err);

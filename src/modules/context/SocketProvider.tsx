@@ -1,14 +1,14 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { io, Manager } from "socket.io-client";
-import { AuthContext } from "./AuthProvider";
+import { useAppSelector } from "../hook/reduxHook";
 //socket context and provider
 const SocketContext = createContext({});
 
 
+
 const SocketProvider = ({ children }: any) => {
     const [socket, setSocket] = useState<any>();
-    const { user } = useContext(AuthContext);
-
+    const user = useAppSelector(state => state.user)
     useEffect(
         () => {
             // user can't null becasue we have a private route

@@ -14,9 +14,9 @@ function Home() {
 
   return (
 
-    <HomeContainer>
+    <HomeContainer sx={{ padding: "40px" }}>
       <Typography>
-        Home
+        Click on the conversation to start chatting
       </Typography>
     </HomeContainer>
   );

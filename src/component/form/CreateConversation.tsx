@@ -1,17 +1,30 @@
 import { Avatar, Box, Button, CircularProgress, IconButton, Input, InputLabel, List, ListItem, Typography } from '@mui/material'
-import { bgcolor } from '@mui/system'
 import { useSnackbar } from "notistack"
-import { SyntheticEvent, useContext, useEffect, useState } from 'react'
-import styled from 'styled-components'
-import { AuthContext } from '../../modules/context/AuthProvider'
+import { SyntheticEvent, useEffect, useState } from 'react'
+// import { AuthContext } from '../../modules/context/AuthProvider'
 import useDebounce from '../../modules/hook/useDebounce'
-import { user } from "../../modules/types"
+// import { user } from '../../modules/types'
 import { fileToDataUri } from '../../modules/utils'
 import { createConversation } from '../../service/conversationService'
 import { searchUser } from '../../service/userService'
 import { FormContainer } from './CreateConversation.style'
+
+interface user {
+    uid?: String;
+    avatar?: string;
+    username?: String;
+    email?: String;
+    password?: String;
+    status?: String;
+    lastActive?: Date;
+    // refreshToken: String | undefined | null;
+    friendList?: user[];
+    blockList?: user[];
+    isConversationadmin?: boolean;
+}
+
 function CreateConversation({ show, setShow }: { show: boolean, setShow: () => void }) {
-    const { user, dispatchUser } = useContext(AuthContext);
+    // const { user, dispatchUser } = useContext(AuthContext);
     const [image, setImage] = useState<string>("")
     const [users, setUsers] = useState<user[]>([])
     const [searchResult, setSearchResult] = useState<user[]>([])

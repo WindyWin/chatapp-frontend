@@ -1,16 +1,16 @@
 import { Children } from "react";
 import { createBrowserRouter, Outlet } from "react-router-dom";
 import Layout from "../../component/layout";
-import AuthProvider from "../context/AuthProvider";
-import { ConversationProvider } from "../context/ConversationProvider";
+import AuthProtecter from "../context/AuthProvider";
+// import { ConversationProvider } from "../context/ConversationProvider";
 import { SocketProvider } from "../context/SocketProvider";
 import { Conversation, Home, Login, NotFound, Profile, Register } from "../page";
 
 const AuthLayout = () => {
   return (
-    <AuthProvider>
+    <AuthProtecter>
       <Outlet />
-    </AuthProvider >
+    </AuthProtecter >
   )
 }
 const ClientLayout = () => {
