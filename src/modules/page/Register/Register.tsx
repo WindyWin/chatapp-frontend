@@ -7,6 +7,7 @@ import PasswordInput from "../../../component/form/PasswordInput";
 import { checkExistUser, register } from "../../../service/userService";
 // import { AuthContext } from "../../context/AuthProvider";
 import { faker } from "@faker-js/faker";
+import LoginWithThirdParty from "../../../component/core/LoginWithThirdParty";
 import { useAppDispatch } from "../../hook/reduxHook";
 import useDebounce from "../../hook/useDebounce";
 import { userSlice } from "../../redux/authSlice";
@@ -74,43 +75,7 @@ function Register() {
         setError({ ...error, confirmPassword: e.target.value !== passwordRef.current?.value })
     }
 
-    const handleLoginWithGoogle = async () => {
-        const provider = new GoogleAuthProvider();
-        try {
 
-            const {
-                user: { uid, displayName, email, }
-            } = await signInWithPopup(auth, provider);
-
-            if (!email) {
-                enqueueSnackbar("Fail to login with google", { variant: "error" })
-                return;
-            }
-
-            const check = await checkExistUser({ email })
-
-            // navigate("/");
-            if (!check.data) {
-                const res = await register({ uid, email, username: `gUser${faker.random.words(1)}${faker.random.numeric()}`, password: "123456" })
-                if (res.status === 200) {
-                    enqueueSnackbar("Login success", { variant: "success" })
-                    dispatch(userSlice.actions.setUsername(res.data.username))
-                }
-            }
-            //@ts-ignore
-            const res = await login({ email, password: "123456" })
-
-            if (res.status === 200) {
-                enqueueSnackbar("Login success", { variant: "success" })
-                dispatch(userSlice.actions.setUsername(res.data.username))
-                // navigate("/");
-            }
-        }
-        catch (err) {
-            console.error(err)
-            enqueueSnackbar("Fail to login with google", { variant: "error" })
-        }
-    }
 
     const handleRegister = async (e: BaseSyntheticEvent) => {
         // const provider = new EmailAuthProvider();
@@ -183,8 +148,7 @@ function Register() {
                 Register
             </Button>
             <Link to="/login">Already have account? Please sign in.</Link>
-            <Typography>Login with 3rd party</Typography>
-            <Button onClick={handleLoginWithGoogle}><i className="fa-brands fa-google"></i></Button>
+            <LoginWithThirdParty />
         </RegisterContainer>
     )
 }

@@ -13,20 +13,20 @@ export interface user {
 }
 
 export interface message {
-    _id: String;
-    username: String;
-    createTime: Date;
-    modifiedTime: Date;
-    message: String;
-    conversation: String;
+    _id?: String;
+    user?: user;
+    createdAt?: Date;
+    modifiedAt?: Date;
+    message?: String;
+    conversation?: String;
 }
 export interface conversation {
     _id?: String;
     users: user[];
     name: String;
     image: String;
-    createTime?: Date;
-    modifiedTime?: Date;
+    createdAt?: Date;
+    modifiedAt?: Date;
     messages?: message[];
 }
 

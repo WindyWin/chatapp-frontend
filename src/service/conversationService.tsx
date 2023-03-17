@@ -8,16 +8,13 @@ const createConversation = async (conversation: conversation) => {
             const storage = getStorage();
             //random name for image
             const storageRef =
-                ref(storage, `conversations/${conversation.name}.${faker.random.word()}${faker.datatype.number({ min: 1, max: 123 })}}`);
+                ref(storage, `conversations/${conversation.name}.${faker.random.word()}${faker.datatype.number({ min: 1, max: 123 })}`);
 
             const snapsot = await uploadString(storageRef, `${conversation.image}`, 'data_url')
             const dowloadURL = await getDownloadURL(snapsot.ref);
             conversation.image = dowloadURL;
-            return axios.post('/conversations/create', conversation)
         }
-        else {
-            return axios.post('/conversations/create', conversation)
-        }
+        return axios.post('/conversations', conversation)
     }
     catch (err) {
         console.error(err)
@@ -34,6 +31,8 @@ const getConversation = async (uid: string) => {
         throw err
     }
 }
+
+
 
 export { createConversation, getConversation };
 

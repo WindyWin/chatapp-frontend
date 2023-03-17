@@ -8,6 +8,7 @@ import { checkExistUser, login, register } from "../../../service/userService";
 import { useAppDispatch } from "../../hook/reduxHook";
 // import { AuthContext } from "../../context/AuthProvider";
 import { useSnackbar } from "notistack";
+import LoginWithThirdParty from "../../../component/core/LoginWithThirdParty";
 import { userSlice } from "../../redux/authSlice";
 import { LoginContainer } from "./Login.styled";
 
@@ -31,43 +32,7 @@ function Login() {
         setError({ ...error, email: !emailRGEX.test(e.target.value) })
         console.table(error)
     }
-    const handleLoginWithGoogle = async () => {
-        const provider = new GoogleAuthProvider();
-        try {
 
-            const {
-                user: { uid, displayName, email, }
-            } = await signInWithPopup(auth, provider);
-
-            if (!email) {
-                enqueueSnackbar("Fail to login with google", { variant: "error" })
-                return;
-            }
-
-            const check = await checkExistUser({ email })
-
-            // navigate("/");
-            if (!check.data) {
-                const res = await register({ uid, email, username: `gUser${faker.random.words(1)}${faker.random.numeric()}`, password: "123456" })
-                if (res.status === 200) {
-                    enqueueSnackbar("Login success", { variant: "success" })
-                    dispatch(userSlice.actions.setUsername(res.data.username))
-                }
-            }
-            //@ts-ignore
-            const res = await login({ email, password: "123456" })
-
-            if (res.status === 200) {
-                enqueueSnackbar("Login success", { variant: "success" })
-                dispatch(userSlice.actions.setUsername(res.data.username))
-                // navigate("/");
-            }
-        }
-        catch (err) {
-            console.error(err)
-            enqueueSnackbar("Fail to login with google", { variant: "error" })
-        }
-    }
 
     const handleLogin = async (e: BaseSyntheticEvent) => {
         try {
@@ -119,8 +84,9 @@ function Login() {
             {/* <Button type="" */}
             <Button disabled={error.email} type="submit">Login</Button>
             <Link to="/register">Create account</Link>
-            <Typography>Login with 3rd party</Typography>
-            <Button onClick={handleLoginWithGoogle}><i className="fa-brands fa-google"></i></Button>
+            {/* <Typography>Login with 3rd party</Typography>
+            <Button onClick={handleLoginWithGoogle}><i className="fa-brands fa-google"></i></Button> */}
+            <LoginWithThirdParty></LoginWithThirdParty>
         </LoginContainer>
     )
 }

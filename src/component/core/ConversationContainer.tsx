@@ -33,6 +33,7 @@ function ConversationContainer() {
         if (user) {
             getConversation(user.uid).then(
                 (res) => {
+                    console.log(res.data)
                     dispatch(setConversations(res.data))
                     dispatch(setLoading(false))
                 }
@@ -42,7 +43,9 @@ function ConversationContainer() {
 
     return (
         <>
-            <ConversationContainerStyled className="conversation-container" sx={{ height: 1, borderRight: `1px solid ${borderColor} ` }}>
+            <ConversationContainerStyled
+                className="conversation-container"
+                sx={{ height: 1, borderRight: `1px solid ${borderColor} ` }}>
                 <Box sx={{ padding: "10px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: `1px solid ${borderColor} ` }}>
                     <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>Chat</Typography>
 
@@ -74,7 +77,7 @@ function ConversationContainer() {
                                             {conversations.value.map((item, index) =>
                                                 <Box key={index} onClick={() => { navigate(`chat/${item._id}`) }}>
                                                     <ConversationSectionItem
-                                                        key={index} conversation={item}
+                                                        conversation={item}
                                                     />
                                                 </Box>)}
                                         </>

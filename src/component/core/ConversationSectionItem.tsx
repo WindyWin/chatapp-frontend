@@ -1,9 +1,12 @@
-import { Avatar, Box, IconButton, Menu, MenuItem, Typography } from "@mui/material"
+import { Avatar, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Menu, MenuItem, Typography } from "@mui/material"
 import moment from "moment"
+import { useSnackbar } from "notistack"
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import styled from "styled-components"
 import { borderColor, subBgColor } from "../../modules/constain/color"
+import { useAppDispatch } from "../../modules/hook/reduxHook"
+import { removeConversation } from "../../modules/redux/conversationSlice"
 import { conversation } from "../../modules/types"
 const StyledConveration = styled.div`
     padding: 10px;
@@ -22,7 +25,9 @@ const StyledConveration = styled.div`
 
 function ConversationSectionItem({ conversation }: { conversation: conversation }) {
     const [anchorEl, setAnchorEl] = useState(null);
-
+    const [open, setOpen] = useState({ leave: false, remove: false })
+    const { enqueueSnackbar } = useSnackbar();
+    const dispatch = useAppDispatch();
     const openOptionMenu = Boolean(anchorEl);
     const handleOpen = (event: any) => {
         setAnchorEl(event.currentTarget);
@@ -30,6 +35,29 @@ function ConversationSectionItem({ conversation }: { conversation: conversation 
     const handleClose = () => {
         setAnchorEl(null);
     };
+    const handleCloseDialog = () => {
+        setOpen({ leave: false, remove: false })
+    }
+
+
+    // @ts-ignore
+    const lastMessage = conversation?.messages[0]?.message || "No message"
+    // console.log(lastMessage)
+    const handleLeaveConversation = () => {
+
+
+        //@ts-ignore
+        dispatch(removeConversation(conversation._id))// conversation loading from api always have _id
+        enqueueSnackbar("You have left the conversation", { variant: "success" })
+        setOpen({ leave: false, remove: false })
+    }
+    const handleRemoveConversation = () => {
+
+        //@ts-ignore
+        dispatch(removeConversation(conversation._id)) // conversation loading from api always have _id
+        enqueueSnackbar("You have remove the conversation", { variant: "success" })
+        setOpen({ leave: false, remove: false })
+    }
 
     return (
         // <Link to={`/conversation/${conversation._id}`}>
@@ -39,8 +67,9 @@ function ConversationSectionItem({ conversation }: { conversation: conversation 
             <Box className="conversation-info" sx={{ width: 1, marginRight: "1rem" }}>
                 <Typography sx={{ fontWeight: 500 }} className="conversation-info__name">{conversation.name}</Typography>
                 <Box sx={{ display: "flex", width: 1, alignItems: "baseline", justifyContent: "space-between" }}>
-                    <Typography className="conversation-info__last-message" variant="caption">last message</Typography>
-                    <Typography className="conversation-info__last-message-time" variant="caption">{moment(conversation.modifiedTime).fromNow()}</Typography>
+                    {/* @ts-ignore */}
+                    <Typography className="conversation-info__last-message" variant="caption">{lastMessage}</Typography>
+                    <Typography className="conversation-info__last-message-time" variant="caption">{moment(conversation.modifiedAt).fromNow()}</Typography>
                 </Box>
             </Box>
             <IconButton onClick={handleOpen} >
@@ -50,10 +79,52 @@ function ConversationSectionItem({ conversation }: { conversation: conversation 
                 anchorEl={anchorEl}
                 open={openOptionMenu}
                 onClose={handleClose}>
-                <MenuItem>Option 1</MenuItem>
-                <MenuItem>Option 2</MenuItem>
+                <MenuItem onClick={() => { setOpen({ leave: true, remove: false }) }}>Leave</MenuItem>
+                <MenuItem onClick={() => { setOpen({ leave: false, remove: true }) }}>Remove</MenuItem>
 
             </Menu>
+            <Dialog
+                open={open.remove}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    Do you want to delete this conversation?
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Once you delete this conversation, you can't get it back
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog}>Cancel</Button>
+                    <Button onClick={handleRemoveConversation} autoFocus>
+                        I am sure
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                open={open.leave}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    Just wanna confirm
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Do you really want to leave this conversation?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog}>Cancel</Button>
+                    <Button onClick={handleLeaveConversation} autoFocus>
+                        Ok
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </StyledConveration>
         // </Link>
     )

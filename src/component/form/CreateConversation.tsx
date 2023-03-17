@@ -3,7 +3,10 @@ import { useSnackbar } from "notistack"
 import { SyntheticEvent, useEffect, useState } from 'react'
 // import { AuthContext } from '../../modules/context/AuthProvider'
 import useDebounce from '../../modules/hook/useDebounce'
+import { selectUser } from '../../modules/redux/authSlice'
 // import { user } from '../../modules/types'
+import { useAppDispatch, useAppSelector } from '../../modules/hook/reduxHook'
+import { addConversation } from '../../modules/redux/conversationSlice'
 import { fileToDataUri } from '../../modules/utils'
 import { createConversation } from '../../service/conversationService'
 import { searchUser } from '../../service/userService'
@@ -25,6 +28,8 @@ interface user {
 
 function CreateConversation({ show, setShow }: { show: boolean, setShow: () => void }) {
     // const { user, dispatchUser } = useContext(AuthContext);
+    const dispatch = useAppDispatch()
+    const state = useAppSelector(state => state)
     const [image, setImage] = useState<string>("")
     const [users, setUsers] = useState<user[]>([])
     const [searchResult, setSearchResult] = useState<user[]>([])
@@ -38,7 +43,8 @@ function CreateConversation({ show, setShow }: { show: boolean, setShow: () => v
 
     const handleAddUser = (userToAdd: user) => {
         //@ts-ignore
-        if (userToAdd.uid === user.uid) return;
+        if (userToAdd.uid === state.user.value.uid) return;
+        if (users.some(u => u.uid === userToAdd.uid)) return;
         setUsers([...users, userToAdd])
         setSearchResult([])
         setSearchValue("")
@@ -75,13 +81,14 @@ function CreateConversation({ show, setShow }: { show: boolean, setShow: () => v
 
 
         //@ts-ignore
-        const currentUser = { uid: user.uid, isConversationAdmin: true }
+        const currentUser = { uid: state.user.value.uid, isConversationAdmin: true }
 
         const conversation = {
             name,
             image,
             users: [...users.map((u): user => { return { uid: u.uid } }), currentUser],
         }
+        console.log(conversation)
         const res = await createConversation(conversation)
 
         if (res.status === 201) {
@@ -90,6 +97,7 @@ function CreateConversation({ show, setShow }: { show: boolean, setShow: () => v
             setName("")
             setImage("")
             setShow()
+            dispatch(addConversation({ ...res.data.conversation, messages: [] }))
         }
         else {
             enqueueSnackbar("Create conversation failed", { variant: "error" })
