@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import { borderColor } from "../../constain/color";
+import { borderColor } from "../../modules/constain/color";
+
 
 
 const StyledConveration = styled.div`

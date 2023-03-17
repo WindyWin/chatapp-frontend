@@ -2,7 +2,7 @@ import { Grid } from "@mui/material";
 import { Navigate, Outlet } from "react-router-dom";
 import styled from "styled-components";
 import { headerHeight } from "../../modules/constain/itemSize";
-import ConversationContainer from "../core/ConversationContainer";
+import ConversationsContainer from "../core/ConversationsContainer";
 import CreateConversation from "../form/CreateConversation";
 import Footer from "./Footer/Footer";
 import Header from "./Header/Header";
@@ -23,7 +23,7 @@ function Layout() {
     <Main>
       <Grid container sx={{ height: 1 }} >
         <Grid item xs={3}>
-          <ConversationContainer></ConversationContainer>
+          <ConversationsContainer />
 
         </Grid>
         <Grid item xs={7}>

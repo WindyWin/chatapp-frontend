@@ -4,7 +4,7 @@ import Layout from "../../component/layout";
 import AuthProtecter from "../context/AuthProvider";
 // import { ConversationProvider } from "../context/ConversationProvider";
 import { SocketProvider } from "../context/SocketProvider";
-import { Conversation, Home, Login, NotFound, Profile, Register } from "../page";
+import { Chat, Home, Login, NotFound, Profile, Register } from "../page";
 
 const AuthLayout = () => {
   return (
@@ -46,7 +46,7 @@ const router = createBrowserRouter([
           },
           {
             path: "/chat/:conversationId",
-            element: <Conversation />
+            element: <Chat />
           },
           {
             path: "/profile",

@@ -1,11 +1,10 @@
 import { Avatar, Box, Tooltip, Typography } from "@mui/material"
 import moment from "moment"
-import { useEffect } from "react"
 import { subBgColor } from "../../modules/constain/color"
 import { useAppSelector } from "../../modules/hook/reduxHook"
 import { selectUser } from "../../modules/redux/authSlice"
-import { selectConversation } from "../../modules/redux/conversationSlice"
 import { message } from "../../modules/types"
+import MessageLoadingFallback from "../ui/MessageLoadingFallback"
 import StyledMessagesContainer from "./MessagesContainer.styled"
 function MessagesContainer(
     { messages, loading }: { messages: message[], loading: boolean }
@@ -21,10 +20,15 @@ function MessagesContainer(
 
     return (
         <StyledMessagesContainer>
+            <MessageLoadingFallback />
+            <MessageLoadingFallback />
+
+
             {messages.map((item, index) => {
 
                 if (item.user.uid !== curentUser.uid)
                     return (
+                        // avatar + message on the left side if it is not current user
                         <Box sx={{ display: "flex", marginBottom: "10px" }} key={index} className="message-container">
                             <Tooltip title={item?.user.username} placement="top">
                                 <Avatar src={item.user?.avatar}></Avatar>
@@ -36,6 +40,7 @@ function MessagesContainer(
                         </Box>
                     )
                 else {
+                    // message on the right side if it is current user
                     return (
                         <Box sx={{ display: "flex", marginBottom: "10px", justifyContent: "flex-end" }} key={index} className="message-container">
                             <Tooltip title={moment(item.createdAt).format("LLL")} placement="top">
