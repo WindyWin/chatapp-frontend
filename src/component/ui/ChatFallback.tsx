@@ -6,7 +6,7 @@ import MessageLoadingFallback from './MessageLoadingFallback';
 const footerHeight = 60;
 const StyledFallback = styled.div`
         position: relative;
- 
+    z-index: 0;
     height: 100%;
     & .chat-header-fallback{
         padding: 8px;

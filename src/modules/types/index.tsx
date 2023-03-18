@@ -27,6 +27,11 @@ export interface conversation {
     image: String;
     createdAt?: Date;
     modifiedAt?: Date;
+    messageCount?: number;
     messages?: message[];
+    page?: number;
+
+    // àter the conversations are loaded, then message 
+    messageInit?: boolean;
 }
 

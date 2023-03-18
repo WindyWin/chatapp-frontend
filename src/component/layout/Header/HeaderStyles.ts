@@ -26,6 +26,7 @@ export const HeaderContainer = styled.header`
     }
     .header__mid #Search-menu{
         position: absolute;
+        z-index: 1;
         top: 57px;
         left:0;
         background-color: ${mainBgColor};

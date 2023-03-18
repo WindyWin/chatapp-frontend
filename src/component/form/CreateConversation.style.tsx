@@ -8,6 +8,7 @@ const FormContainer = styled.div`
     right:0;
     bottom:0;
     position:fixed;
+    z-index:1;
     justify-content:center;
     align-items:center;
     .background{

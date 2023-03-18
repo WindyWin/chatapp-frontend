@@ -1,9 +1,9 @@
 import { Avatar, Box, IconButton, Input, Typography } from '@mui/material';
 import moment from 'moment';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../modules/hook/reduxHook';
 import { selectUser } from '../../modules/redux/authSlice';
-import { addNewMessage, initMessages, selectConversation } from '../../modules/redux/conversationSlice';
+import { addNewMessage, addOldMessages, initMessages, selectConversation } from '../../modules/redux/conversationSlice';
 import { createMessage, getMessage } from '../../service/messageService';
 import ChatFallback from '../ui/ChatFallback';
 import StyledConveration from './ConversationContainer.Styled';
@@ -16,40 +16,45 @@ function Conversation({ conversationId }: { conversationId: string | undefined }
     const conversations = useAppSelector(selectConversation)
     const [loading, setLoading] = useState(true)
 
-
-    const [conversation, setConversation] = useState(conversations.value.find(conversation => conversation._id === conversationId))
+    const conversation = conversations.value.find(conversation => conversation._id === conversationId)
 
 
     const scrollToBottom = () => {
-        if (ref.current instanceof HTMLElement)
+        if (ref.current instanceof HTMLElement) {
             ref.current.scroll(0, ref.current.scrollHeight);
+        }
     }
 
-    useEffect(() => {
-        scrollToBottom()
-    }, [])
+
     useEffect(() => {
 
         if (!conversations.loading) {
-            getMessage(conversationId, 1, 10, user.uid).then(
-                (res) => {
-                    dispatch(initMessages({ conversationId: conversationId ?? "", messages: res.data }))
-                    setLoading(false)
-                }
-            )
-            setConversation(conversations.value.find(conversation => conversation._id === conversationId))
+
+            // console.table({ param: conversationId, conversation: conversation._id })
+
+
+            if (!conversation?.messageInit) {
+                // console.log("message init")
+                getMessage(conversationId, 1, 10, user.uid).then(
+                    (res) => {
+                        dispatch(initMessages({ conversationId: conversationId ?? "", messages: res.data }))
+                        setLoading(false)
+                        scrollToBottom()
+                    }
+                )
+            }
         }
 
 
-    }, [conversations.loading, conversationId])
+    }, [conversations, conversationId])
 
 
-    useEffect(() => {
-        if (!conversations.loading) {
-            setConversation(conversations.value.find(conversation => conversation._id === conversationId))
-        }
+    // useEffect(() => {
+    //     if (!conversations.loading) {
+    //         setConversation(conversations.value.find(conversation => conversation._id === conversationId))
+    //     }
 
-    }, [conversations])
+    // }, [conversations])
 
 
     if (conversations.loading)
@@ -77,10 +82,24 @@ function Conversation({ conversationId }: { conversationId: string | undefined }
         }
     }
 
+    //bug when change conversation, the browser will scroll to top and trigger this event
     const handleScrollToTop = async (e: { currentTarget: { scrollTop: number; }; }) => {
         //if scroll to top load more message data
         if (e.currentTarget.scrollTop === 0) {
+
             console.log('scroll to top')
+            const length = conversation?.messages?.length || 0;
+            const maxMessage = conversation?.messageCount || 0;
+            if (length < maxMessage) {
+                let page = conversation?.page;
+                console.log("page", page)
+                getMessage(conversationId, page + 1, 10, user.uid).then(
+                    (res) => {
+                        dispatch(addOldMessages({ conversationId: conversationId ?? "", messages: res.data }))
+                    }
+                )
+            }
+
         }
     }
     return (
@@ -94,11 +113,11 @@ function Conversation({ conversationId }: { conversationId: string | undefined }
                 </Box>
 
             </Box>
-            <Box ref={ref} onScroll={handleScrollToTop}
+            <Box ref={ref} onWheel={handleScrollToTop}
                 // @ts-ignore
                 sx={{ overflowY: "scroll", height: `calc(100vh - ${Math.floor(ref.current?.getBoundingClientRect().y)}px - ${footerHeight}px)` }}
                 className="conversation-body">
-                <MessagesContainer messages={conversation?.messages || []} loading={loading}></MessagesContainer>
+                <MessagesContainer maxMessagesLength={conversation?.messageCount ?? 0} messages={conversation?.messages || []} loading={loading}></MessagesContainer>
             </Box>
             <Box sx={{ height: footerHeight + "px" }} className="conversation-footer">
                 <form onSubmit={handleSendMessage} >

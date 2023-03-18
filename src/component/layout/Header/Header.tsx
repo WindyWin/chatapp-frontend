@@ -135,7 +135,10 @@ function Header() {
           open={openSettingMenu}
           onClose={handleClose}>
           <MenuItem>Color theme</MenuItem>
-          <MenuItem onClick={logoutHandler}><i style={{ marginRight: "1 rem" }} className="fa-solid fa-right-from-bracket"></i><span >log out</span></MenuItem>
+          <MenuItem onClick={logoutHandler}>
+            <i style={{ marginRight: "1 rem" }} className="fa-solid fa-right-from-bracket"></i>
+            <span >log out</span>
+          </MenuItem>
         </Menu>
       </div>
     </HeaderContainer>

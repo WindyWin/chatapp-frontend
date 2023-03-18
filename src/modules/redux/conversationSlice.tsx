@@ -20,7 +20,8 @@ export const conversationSlice = createSlice({
     initialState,
     reducers: {
         setConversations: (state, action: PayloadAction<conversation[]>) => {
-            return { ...state, value: action.payload }
+            const conversations = action.payload.map((conversation) => { return { ...conversation, messageInit: false, page: 1 } });
+            return { ...state, value: conversations }
         },
         addConversation: (state, action: PayloadAction<conversation>) => {
             return { ...state, value: [action.payload, ...state.value] }
@@ -50,7 +51,8 @@ export const conversationSlice = createSlice({
                     return {
                         ...conversation,
                         messages: [action.payload.message, ...conversation.messages],
-                        modifiedAt: action.payload.message.createdAt
+                        modifiedAt: action.payload.message.createdAt,
+                        messageCount: conversation.messageCount + 1,
                     }
                 }
                 return conversation
@@ -72,7 +74,8 @@ export const conversationSlice = createSlice({
                 if (conversation._id === action.payload.conversationId) {
                     return {
                         ...conversation,
-                        messages: action.payload.messages
+                        messages: action.payload.messages,
+                        messageInit: true
                     }
                 }
                 return conversation
@@ -88,7 +91,8 @@ export const conversationSlice = createSlice({
                 if (conversation._id === action.payload.conversationId) {
                     return {
                         ...conversation,
-                        messages: [...conversation.messages, ...action.payload.messages,]
+                        messages: [...conversation.messages, ...action.payload.messages],
+                        page: conversation.page + 1,
                     }
                 }
                 return conversation
