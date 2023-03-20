@@ -13,7 +13,19 @@ function MessagesContainer(
     const curentUser = useAppSelector(selectUser)
     const length = messages.length;
     if (loading)
-        return <div>Loading...</div>
+        return <>
+            <MessageLoadingFallback />
+            <MessageLoadingFallback />
+            <MessageLoadingFallback />
+            <MessageLoadingFallback />
+            <MessageLoadingFallback />
+            <MessageLoadingFallback />
+            <MessageLoadingFallback />
+            <MessageLoadingFallback />
+            <MessageLoadingFallback />
+            <MessageLoadingFallback />
+            <MessageLoadingFallback />
+        </>
 
     if (length === 0)
         return <Typography sx={{ padding: "10px" }}>No message</Typography>

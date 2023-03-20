@@ -44,15 +44,12 @@ function ConversationSectionItem({ conversation }: { conversation: conversation 
     const lastMessage = conversation?.messages[0]?.message || "No message"
     // console.log(lastMessage)
     const handleLeaveConversation = () => {
-
-
         //@ts-ignore
         dispatch(removeConversation(conversation._id))// conversation loading from api always have _id
         enqueueSnackbar("You have left the conversation", { variant: "success" })
         setOpen({ leave: false, remove: false })
     }
     const handleRemoveConversation = () => {
-
         //@ts-ignore
         dispatch(removeConversation(conversation._id)) // conversation loading from api always have _id
         enqueueSnackbar("You have remove the conversation", { variant: "success" })
