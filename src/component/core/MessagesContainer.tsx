@@ -1,4 +1,4 @@
-import { Avatar, Box, Tooltip, Typography } from "@mui/material"
+import { Avatar, Box, CircularProgress, Tooltip, Typography } from "@mui/material"
 import moment from "moment"
 import { memo, useMemo } from "react"
 import { subBgColor } from "../../modules/constain/color"
@@ -13,7 +13,10 @@ function MessagesContainer(
     const curentUser = useAppSelector(selectUser)
     const length = messages.length;
     if (loading)
-        return <>
+        return <Box>
+            <Box sx={{ display: "flex", justifyContent: "center" }}>
+                <CircularProgress />
+            </Box>
             <MessageLoadingFallback />
             <MessageLoadingFallback />
             <MessageLoadingFallback />
@@ -23,9 +26,7 @@ function MessagesContainer(
             <MessageLoadingFallback />
             <MessageLoadingFallback />
             <MessageLoadingFallback />
-            <MessageLoadingFallback />
-            <MessageLoadingFallback />
-        </>
+        </Box>
 
     if (length === 0)
         return <Typography sx={{ padding: "10px" }}>No message</Typography>
