@@ -17,21 +17,21 @@ import "./_reset.css";
 
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <Provider store={store}>
-      <SnackbarProvider maxSnack={3}>
-        <ErrorBoundary
-          //when error, show ErrorFallback component
-          fallback={<ErrorFallback />}
-          onReset={() => window.location.reload()}
-        >
-          <Suspense
-            //when loading show Skeleton component
-            fallback={<LoadingFallback />}>
-            <RouterProvider router={router}></RouterProvider>
-          </Suspense>
-        </ErrorBoundary>
-      </SnackbarProvider>
-    </Provider>
-  </StrictMode>
+  // <StrictMode>
+  <Provider store={store}>
+    <SnackbarProvider maxSnack={3}>
+      <ErrorBoundary
+        //when error, show ErrorFallback component
+        fallback={<ErrorFallback />}
+        onReset={() => window.location.reload()}
+      >
+        <Suspense
+          //when loading show Skeleton component
+          fallback={<LoadingFallback />}>
+          <RouterProvider router={router}></RouterProvider>
+        </Suspense>
+      </ErrorBoundary>
+    </SnackbarProvider>
+  </Provider>
+  // </StrictMode>
 );

@@ -11,9 +11,11 @@ import { getConversation } from "../../service/conversationService"
 import CreateConversation from "../form/CreateConversation"
 import ConversationLoadingFallback from "../ui/ConversationLoadingFallback"
 // import CreateConversation from "../form/CreateConversation"
+import socket from "../../config/socket"
 import { selectUser } from "../../modules/redux/authSlice"
+import { addNewMessage } from "../../modules/redux/conversationSlice"
+import { message } from "../../modules/types"
 import ConversationSectionItem from "./ConversationSectionItem"
-
 const ConversationContainerStyled = styled(Box)`
     height:100%;
     border-right: 1px solid ${borderColor};
@@ -36,11 +38,20 @@ function ConversationsContainer() {
                     console.log(res.data)
                     dispatch(setConversations(res.data))
                     dispatch(setLoading(false))
+
                 }
             )
+
         }
     }, [user])
+    useEffect(() => {
+        socket.on("new-message", (data: message) => {
+            console.log(data)
 
+            // @ts-ignore
+            dispatch(addNewMessage({ conversationId: data.conversation, message: data }))
+        })
+    }, [])
     return (
         <>
             <ConversationContainerStyled

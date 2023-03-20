@@ -1,13 +1,15 @@
 import { Avatar, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Menu, MenuItem, Typography } from "@mui/material"
 import moment from "moment"
 import { useSnackbar } from "notistack"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import styled from "styled-components"
+import socket from "../../config/socket"
 import { borderColor, subBgColor } from "../../modules/constain/color"
-import { useAppDispatch } from "../../modules/hook/reduxHook"
-import { removeConversation } from "../../modules/redux/conversationSlice"
-import { conversation } from "../../modules/types"
+import { useAppDispatch, useAppSelector } from "../../modules/hook/reduxHook"
+import { selectUser } from "../../modules/redux/authSlice"
+import { addNewMessage, removeConversation } from "../../modules/redux/conversationSlice"
+import { conversation, message } from "../../modules/types"
 const StyledConveration = styled.div`
     padding: 10px;
     display:flex;
@@ -28,6 +30,7 @@ function ConversationSectionItem({ conversation }: { conversation: conversation 
     const [open, setOpen] = useState({ leave: false, remove: false })
     const { enqueueSnackbar } = useSnackbar();
     const dispatch = useAppDispatch();
+    const user = useAppSelector(selectUser)
     const openOptionMenu = Boolean(anchorEl);
     const handleOpen = (event: any) => {
         setAnchorEl(event.currentTarget);
@@ -39,6 +42,17 @@ function ConversationSectionItem({ conversation }: { conversation: conversation 
         setOpen({ leave: false, remove: false })
     }
 
+
+
+    useEffect(() => {
+
+        socket.emit("join", { uid: user.uid, conversation: conversation._id })
+
+
+        return () => {
+            socket.emit("leave", { uid: user.uid, conversation: conversation._id })
+        }
+    }, [])
 
     // @ts-ignore
     const lastMessage = conversation?.messages[0]?.message || "No message"

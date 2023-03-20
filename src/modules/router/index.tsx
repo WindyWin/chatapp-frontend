@@ -2,8 +2,6 @@ import { Children } from "react";
 import { createBrowserRouter, Outlet } from "react-router-dom";
 import Layout from "../../component/layout";
 import AuthProtecter from "../context/AuthProvider";
-// import { ConversationProvider } from "../context/ConversationProvider";
-import { SocketProvider } from "../context/SocketProvider";
 import { Chat, Home, Login, NotFound, Profile, Register } from "../page";
 
 const AuthLayout = () => {
@@ -15,11 +13,7 @@ const AuthLayout = () => {
 }
 const ClientLayout = () => {
   return (
-    <SocketProvider>
-      {/* <ConversationProvider> */}
-      <Layout />
-      {/* </ConversationProvider> */}
-    </SocketProvider>
+    <Layout />
   )
 }
 const router = createBrowserRouter([

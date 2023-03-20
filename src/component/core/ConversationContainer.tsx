@@ -2,6 +2,7 @@ import { Avatar, Box, IconButton, Input, Typography } from '@mui/material';
 import moment from 'moment';
 import { useSnackbar } from 'notistack';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import socket from '../../config/socket';
 import { useAppDispatch, useAppSelector } from '../../modules/hook/reduxHook';
 import { selectUser } from '../../modules/redux/authSlice';
 import { addNewMessage, addOldMessages, initMessages, selectConversation } from '../../modules/redux/conversationSlice';
@@ -68,7 +69,7 @@ function Conversation({ conversationId }: { conversationId: string | undefined }
     const handleSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-
+            /* old ocde use axios
             const message = {
                 message: (e.target as HTMLFormElement).content.value,
                 conversation: conversationId,
@@ -77,10 +78,21 @@ function Conversation({ conversationId }: { conversationId: string | undefined }
 
             const res = await createMessage(message);
             dispatch(addNewMessage({ conversationId: conversationId ?? "", message: res.data }))
+            */
+
+            //new code use socket
+            const message = {
+                message: (e.target as HTMLFormElement).content.value,
+                conversation: conversationId,
+                uid: user.uid
+            }
+            socket.emit('send-message', message)
+
+
+            //rest form
             // @ts-ignore
             e.target.reset()
             // scrollToBottom();
-
         }
         catch (err) {
             console.error(err)
