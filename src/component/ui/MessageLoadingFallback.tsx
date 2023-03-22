@@ -1,5 +1,5 @@
 import { Box, Skeleton } from '@mui/material'
-import { subBgColor } from '../../modules/constain/color'
+import { subBgColor } from '../../constain/color'
 
 function MessageLoadingFallback() {
     const side = Math.floor(Math.random() * 2) === 0

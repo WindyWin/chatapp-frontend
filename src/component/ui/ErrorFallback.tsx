@@ -5,7 +5,7 @@ const ErrorFallback = ({ error, resetErrorBoundary }: any) => {
     return (
         <div role="error">
             <Typography>Something went wrong!!</Typography>
-            <pre>error.message</pre>
+            <pre>{error.message}</pre>
             <Button >try again</Button>
         </div>
     )

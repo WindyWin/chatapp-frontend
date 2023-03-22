@@ -5,12 +5,14 @@ export interface user {
     email?: String;
     password?: String;
     status?: String;
+    oldUsername?: [{ username: String, timestamp: Date }];
     lastActive?: Date;
     // refreshToken: String | undefined | null;
     friendList?: user[];
     blockList?: user[];
     isConversationadmin?: boolean;
 }
+
 
 export interface message {
     _id?: String;

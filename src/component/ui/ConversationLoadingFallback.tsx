@@ -1,6 +1,6 @@
 import styled from "@emotion/styled"
 import { Box, Skeleton } from "@mui/material"
-import { borderColor } from "../../modules/constain/color"
+import { borderColor } from "../../constain/color"
 
 const BoxStyled = styled(Box)`
     display:flex;

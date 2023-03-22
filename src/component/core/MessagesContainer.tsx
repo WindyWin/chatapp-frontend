@@ -1,7 +1,7 @@
 import { Avatar, Box, CircularProgress, Tooltip, Typography } from "@mui/material"
 import moment from "moment"
 import { memo, useMemo } from "react"
-import { subBgColor } from "../../modules/constain/color"
+import { subBgColor } from "../../constain/color"
 import { useAppSelector } from "../../modules/hook/reduxHook"
 import { selectUser } from "../../modules/redux/authSlice"
 import { message } from "../../modules/types"

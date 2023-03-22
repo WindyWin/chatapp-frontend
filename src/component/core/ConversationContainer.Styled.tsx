@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { borderColor } from "../../modules/constain/color";
+import { borderColor } from "../../constain/color";
 
 
 

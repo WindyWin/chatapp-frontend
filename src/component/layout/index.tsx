@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material";
 import { Navigate, Outlet } from "react-router-dom";
 import styled from "styled-components";
-import { headerHeight } from "../../modules/constain/itemSize";
+import { headerHeight } from "../../constain/itemSize";
 import ConversationsContainer from "../core/ConversationsContainer";
 import CreateConversation from "../form/CreateConversation";
 import Footer from "./Footer/Footer";

@@ -11,9 +11,10 @@ var borderColor = "rgba(0, 0, 0, 0.1)"
 
 var mainFont = 'Helvetica Neue, Helvetica, Arial, sans-serif'
 var successColor = '#52c41a'
+var focusColor = '#40a9ff'
 var errorColor = '#f5222d'
 var warningColor = '#faad14'
 
 
-export { mainColor, subColor, mainBgColor, borderColor, subBgColor, textColor, subTextColor, mainFont, successColor, errorColor, warningColor }
+export { mainColor, subColor, focusColor, mainBgColor, borderColor, subBgColor, textColor, subTextColor, mainFont, successColor, errorColor, warningColor }
 

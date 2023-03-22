@@ -11,7 +11,7 @@ import UserSearchItem from "../../core/UserSearchItem";
 import { HeaderContainer } from "./HeaderStyles";
 
 function Header() {
-  const user = useAppSelector(state => state.user)
+  const user = useAppSelector(state => state.user.value)
   const dispatch = useAppDispatch()
   const auth = getAuth()
   const navigate = useNavigate();
@@ -75,9 +75,11 @@ function Header() {
               <>{
                 searchResult.map((user, index) =>
                   <ListItem key={index} onClick={() => { navigate(`/user/${user.username}`) }}>
-                    <UserSearchItem
-                      user={user}
-                    />
+                    <Link to={`/profile/${user.uid}`}>
+                      <UserSearchItem
+                        user={user}
+                      />
+                    </Link>
                   </ListItem>
                 )
               }
@@ -128,13 +130,14 @@ function Header() {
         </Menu>
         <div className="btn-container">
           {/* @ts-ignore */}
-          <Button id="btn-setting" onClick={setAnchoEl}><Avatar src={user.avatar} ></Avatar></Button>
+          <Button id="btn-setting" onClick={setAnchoEl}><Avatar src={user?.avatar ?? ""} ></Avatar ></Button>
         </div>
         <Menu id="setting-menu"
           anchorEl={anchorEl}
           open={openSettingMenu}
           onClose={handleClose}>
           <MenuItem>Color theme</MenuItem>
+          <MenuItem><Link to="/profile">Profile</Link></MenuItem>
           <MenuItem onClick={logoutHandler}>
             <i style={{ marginRight: "1 rem" }} className="fa-solid fa-right-from-bracket"></i>
             <span >log out</span>

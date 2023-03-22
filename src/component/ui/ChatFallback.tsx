@@ -1,7 +1,7 @@
 import { Box, IconButton, Input, Skeleton } from '@mui/material';
 import { useRef } from 'react';
 import styled from 'styled-components';
-import { borderColor } from '../../modules/constain/color';
+import { borderColor } from '../../constain/color';
 import MessageLoadingFallback from './MessageLoadingFallback';
 const footerHeight = 60;
 const StyledFallback = styled.div`

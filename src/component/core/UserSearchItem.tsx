@@ -20,7 +20,6 @@ function UserSearchItem({ user }: { user: user }) {
 
     return (
         <UserSearchItemStyle className="user-search-item" >
-
             <Avatar src={user.avatar} ></Avatar>
             <div className="item-info">
                 <div className="item-info__username">{user.username}</div>

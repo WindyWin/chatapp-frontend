@@ -64,7 +64,7 @@ function Register() {
     }
     const usernameCheck = (e: BaseSyntheticEvent) => {
         setUsername(e.target.value)
-        const usernameRGEX = new RegExp("^[a-zA-Z0-9]{6,}$");
+        const usernameRGEX = new RegExp("^[A-Za-z0-9.]{6,}$");
         setError({ ...error, username: !usernameRGEX.test(username) ? "Username must contain at least 6 character and not contain special character" : "" })
     }
     const passwordCheck = (e: BaseSyntheticEvent) => {

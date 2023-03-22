@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { subBgColor } from "../../constain/color";
+import { subBgColor } from "../../../constain/color";
 
 
 export const RegisterContainer = styled.form`

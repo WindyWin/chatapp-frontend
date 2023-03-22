@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { mainBgColor, subBgColor, subColor } from '../../../modules/constain/color';
-import { headerHeight } from '../../../modules/constain/itemSize';
+import { mainBgColor, subBgColor, subColor } from '../../../constain/color';
+import { headerHeight } from '../../../constain/itemSize';
 export const HeaderContainer = styled.header`
     display: flex;
     width: 100%;

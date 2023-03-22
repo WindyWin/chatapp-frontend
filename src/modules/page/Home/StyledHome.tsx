@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { Grid } from "@mui/material";
 import { isStyledComponent } from "@mui/styled-engine-sc";
-import { subColor } from "../../constain/color";
+import { subColor } from "../../../constain/color";
 
 const HomeContainer = styled(Grid)`
     height: 100%;
