@@ -45,7 +45,10 @@ function Conversation({ conversationId }: { conversationId: string | undefined }
                         // scrollToBottom()
                     }
                 )
-
+            }
+            //case message already load and user go back to conversation from orther page
+            if (conversation?.messages?.length > 1) {
+                setLoading(false)
             }
         }
 
@@ -143,7 +146,10 @@ function Conversation({ conversationId }: { conversationId: string | undefined }
                     height: `calc(100vh - ${Math.floor(ref.current?.getBoundingClientRect().y)}px - ${footerHeight}px)`
                 }}
                 className="conversation-body">
-                <MessagesContainer maxMessagesLength={conversation?.messageCount ?? 0} messages={conversation?.messages || []} loading={loading}></MessagesContainer>
+                <MessagesContainer
+                    maxMessagesLength={conversation?.messageCount ?? 0}
+                    messages={conversation?.messages || []}
+                    loading={loading}></MessagesContainer>
             </Box>
             <Box sx={{ height: footerHeight + "px" }} className="conversation-footer">
                 <form onSubmit={handleSendMessage} >

@@ -61,7 +61,9 @@ function Header() {
   const SearchResultPopup = () => (
     <Box id="Search-menu"
       hidden={!openSearchMenu}
+      onClick={handleClose}
     >
+      <div className="overlay"></div>
       <List >
         {loading.search ? (
           <>
@@ -74,12 +76,12 @@ function Header() {
             {searchResult.length === 0 ? <ListItem ><Typography>No result match keyword</Typography></ListItem> :
               <>{
                 searchResult.map((user, index) =>
-                  <ListItem key={index} onClick={() => { navigate(`/user/${user.username}`) }}>
-                    <Link to={`/profile/${user.uid}`}>
-                      <UserSearchItem
-                        user={user}
-                      />
-                    </Link>
+                  <ListItem key={index} onClick={() => { navigate(`/profile/${user.uid}`) }}>
+                    {/* <Link to={`/profile/${user.uid}`}> */}
+                    <UserSearchItem
+                      user={user}
+                    />
+                    {/* </Link> */}
                   </ListItem>
                 )
               }
@@ -99,11 +101,12 @@ function Header() {
         </Link>
 
       </div>
-      <div className="header__mid">
+      <div className="header__mid"
+      >
         <TextField
           id="input__search-user"
           onFocus={setAnchoEl}
-          onBlur={handleClose}
+
           label="Search user"
           className="input__search-user"
           onChange={(e) => { setSearchValue(e.target.value) }}
@@ -117,6 +120,7 @@ function Header() {
         // sx={{ p: '9px' }}
         />
         <SearchResultPopup />
+
       </div>
       <div className="header__right">
         <div className="btn-container" >
@@ -137,7 +141,7 @@ function Header() {
           open={openSettingMenu}
           onClose={handleClose}>
           <MenuItem>Color theme</MenuItem>
-          <MenuItem><Link to="/profile">Profile</Link></MenuItem>
+          <MenuItem><Link to="/profile/">Profile</Link></MenuItem>
           <MenuItem onClick={logoutHandler}>
             <i style={{ marginRight: "1 rem" }} className="fa-solid fa-right-from-bracket"></i>
             <span >log out</span>

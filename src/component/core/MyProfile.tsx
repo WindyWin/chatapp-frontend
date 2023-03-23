@@ -1,4 +1,4 @@
-import { Avatar, Button, Dialog, DialogActions, DialogContent, DialogTitle, Input, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material"
+import { Avatar, Button, Dialog, DialogActions, DialogContent, DialogTitle, Input, List, ListItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material"
 import { Box } from "@mui/system"
 import moment from "moment"
 import { useSnackbar } from "notistack"
@@ -6,23 +6,15 @@ import { useEffect, useRef, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../../modules/hook/reduxHook"
 import { selectUser, setUser } from "../../modules/redux/authSlice"
 import { fileToDataUri } from "../../modules/utils"
-import { updateUserAvatar } from "../../service/userService"
+import { getUserByUid, updateUserAvatar } from "../../service/userService"
 import UpdatePassword from "../form/UpdatePassword"
 import UpdateProfile from "../form/UpdateProfile"
 import StatusDot from "../ui/StatusDot"
 import MyProfileStyled from "./MyProfile.styled"
 import Tab from "./Tab"
+import UserSearchItem from "./UserSearchItem"
 
-function createData(
-    username: string,
-    timestamp: Date
-) {
-    return { username, date: moment(timestamp).format("DD/MM/YYYY") };
-}
-const rows = [
-    createData('Frozen yoghurt', new Date()),
-    createData('Ice cream sandwich', new Date()),
-];
+
 
 const tabsItem = [{
     name: "Update Profile",
@@ -36,7 +28,7 @@ const tabsItem = [{
 
 
 function MyProfile({ uid }: { uid: string | undefined }) {
-    const user = useAppSelector(selectUser)
+    const [user, setUser] = useState<any>(useAppSelector(selectUser))
     const [avatar, setAvatar] = useState<string>("")
     const [viewOverlay, setViewOverlay] = useState(false)
     const { enqueueSnackbar } = useSnackbar()
@@ -52,8 +44,22 @@ function MyProfile({ uid }: { uid: string | undefined }) {
 
     useEffect(() => {
         if (user) setAvatar(user.avatar)
-    }, [user])
+        if (!!uid) {
+            getUserByUid(uid).then(res => {
+                if (res.status === 200) {
+                    setUser(res.data)
+                }
 
+            })
+                .catch((err) => {
+                    console.log(err)
+                })
+        }
+    }, [uid])
+
+    useEffect(() => {
+        if (user) setAvatar(user.avatar)
+    }, [user])
     const handleCancelUpdateAvatar = () => {
         setViewOverlay(false)
         setAvatar(user?.avatar || "")
@@ -63,6 +69,7 @@ function MyProfile({ uid }: { uid: string | undefined }) {
         if (result.status === 200) {
             enqueueSnackbar("Update avatar success", { variant: "success" })
             setViewOverlay(false)
+            //@ts-ignore
             dispatch(setUser({ ...user, avatar: result.data.avatar }))
         }
         else {
@@ -141,10 +148,11 @@ function MyProfile({ uid }: { uid: string | undefined }) {
                         <Button onClick={handleAddFriend}>Add Friend</Button>
                         <Button onClick={handleBlock}>Block</Button>
                         <Box sx={{ margin: "10px 0 " }}>
-                            <Typography >{`Create Date: ${moment(user.createAt).format("DD/MM/YYYY")}`}</Typography>
+                            <Typography >{`Create Date: ${moment(user.createdAt).format("DD/MM/YYYY")}`}</Typography>
                             <Typography >{`Last Active: ${moment(user.lastActive).fromNow()}`}</Typography>
                         </Box>
                         <Typography variant="h6">Old Username</Typography>
+                        {/* i will update the tab later */}
                         <TableContainer>
                             <Table sx={{ width: "300" }} aria-label="simple table">
                                 <TableHead>
@@ -154,7 +162,8 @@ function MyProfile({ uid }: { uid: string | undefined }) {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {rows.map((row, index) => (
+                                    {user.oldUsername.length === 0 && <Typography>Empty</Typography>}
+                                    {user.oldUsername.map((row, index) => (
                                         <TableRow
                                             key={index}
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -162,13 +171,22 @@ function MyProfile({ uid }: { uid: string | undefined }) {
                                             <TableCell component="th" scope="row">
                                                 {row.username}
                                             </TableCell>
-                                            <TableCell >{row.date}</TableCell>
+                                            <TableCell >{moment(row.timestamp).format("LLL")}</TableCell>
 
                                         </TableRow>
                                     ))}
                                 </TableBody>
                             </Table>
                         </TableContainer>
+                        <Typography variant="h6">Friend List</Typography>
+                        <List>
+                            {user.friendList.length === 0 && <Typography>Empty</Typography>}
+                            {user.friendList.map((friend: any, index: number) => (
+                                <ListItem key={index}>
+                                    <UserSearchItem user={friend} />
+                                </ListItem>
+                            ))}
+                        </List>
                     </Box>}
             </Box>
         </MyProfileStyled>

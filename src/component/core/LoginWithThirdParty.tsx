@@ -34,13 +34,13 @@ function LoginWithThirdParty() {
                 }
             }
             //@ts-ignore
-            const res = await login({ email, password: "123456" })
+            // const res = await login({ email, password: "123456" })
 
-            if (res.status === 200) {
-                enqueueSnackbar("Login success", { variant: "success" })
-                dispatch(userSlice.actions.setUsername(res.data.username))
-                // navigate("/");
-            }
+            // if (res.status === 200) {
+            enqueueSnackbar("Login success", { variant: "success" })
+            //     dispatch(userSlice.actions.setUsername(res.data.username))
+            //     // navigate("/");
+            // }
         }
         catch (err) {
             console.error(err)

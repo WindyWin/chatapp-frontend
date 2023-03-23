@@ -35,6 +35,15 @@ export const HeaderContainer = styled.header`
         overflow-y:hidden;
         border:1px solid ${subBgColor};
         border-top:none;
+        .overlay{
+            position:fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            z-index:0;
+            
+        }
     }
     .header__right{
         margin-right: 3rem;
