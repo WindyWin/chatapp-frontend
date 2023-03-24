@@ -1,12 +1,19 @@
+import { Grid } from '@mui/material'
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import ConversationContainer from '../../../component/core/ConversationContainer'
-import socket from '../../../config/socket'
+import { headerHeight } from '../../../constain/itemSize'
 function Chat() {
     const { conversationId } = useParams()
-
     return (
-        <ConversationContainer conversationId={conversationId} />
+        <Grid >
+            <Grid item xs={9} sx={{ height: `calc(100vh - ${headerHeight}px)` }}>
+                <ConversationContainer conversationId={conversationId} />
+            </Grid>
+            <Grid item xs={3}>
+
+            </Grid>
+        </Grid>
     )
 }
 

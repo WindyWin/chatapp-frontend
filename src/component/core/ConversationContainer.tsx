@@ -47,7 +47,8 @@ function Conversation({ conversationId }: { conversationId: string | undefined }
                 )
             }
             //case message already load and user go back to conversation from orther page
-            if (conversation?.messages?.length > 1) {
+            let messageLength = conversation?.messages?.length ?? 1
+            if (messageLength > 1) {
                 setLoading(false)
             }
         }

@@ -37,3 +37,16 @@ export interface conversation {
     messageInit?: boolean;
 }
 
+
+export interface notification {
+    _id: string;
+    sender: string;
+    receiver: string;
+    type: "friend request" | "friend request accepted" | "friend request rejected" | "message" | "conversation invite" | "conversation invite accepted" | "conversation invite rejected";
+    content: string;
+    isRead: boolean;
+    redirect?: string;
+    action?: string;
+    createdAt: Date;
+    modifiedAt: Date;
+}

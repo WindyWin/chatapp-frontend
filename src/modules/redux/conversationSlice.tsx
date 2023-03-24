@@ -92,6 +92,7 @@ export const conversationSlice = createSlice({
                     return {
                         ...conversation,
                         messages: [...conversation.messages, ...action.payload.messages],
+                        // @ts-ignore
                         page: conversation.page + 1,
                     }
                 }

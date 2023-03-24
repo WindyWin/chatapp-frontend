@@ -67,7 +67,8 @@ function UpdateProfile() {
     const handleSubmit = async (e: BaseSyntheticEvent) => {
         e.preventDefault()
 
-        const data = { uid: user.uid, oldUsername: user.username, username: usernameRef.current?.value }
+        const data = { uid: user.uid, oldUsername: user.username, username: usernameRef.current?.value ?? "error" }
+
         const result = await updateUserUsername(data)
         if (result.status === 200) {
             dispatch(setUsernameRedux(result.data.username))

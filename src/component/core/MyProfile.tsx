@@ -1,4 +1,4 @@
-import { Avatar, Button, Dialog, DialogActions, DialogContent, DialogTitle, Input, List, ListItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material"
+import { Avatar, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Input, List, ListItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from "@mui/material"
 import { Box } from "@mui/system"
 import moment from "moment"
 import { useSnackbar } from "notistack"
@@ -12,7 +12,7 @@ import UpdateProfile from "../form/UpdateProfile"
 import StatusDot from "../ui/StatusDot"
 import MyProfileStyled from "./MyProfile.styled"
 import Tab from "./Tab"
-import UserSearchItem from "./UserSearchItem"
+import UserSearchItem from "./UserItem"
 
 
 
@@ -28,7 +28,8 @@ const tabsItem = [{
 
 
 function MyProfile({ uid }: { uid: string | undefined }) {
-    const [user, setUser] = useState<any>(useAppSelector(selectUser))
+    const loginUser = useAppSelector(selectUser)
+    const [user, setUser] = useState<any>(loginUser)
     const [avatar, setAvatar] = useState<string>("")
     const [viewOverlay, setViewOverlay] = useState(false)
     const { enqueueSnackbar } = useSnackbar()
@@ -55,6 +56,9 @@ function MyProfile({ uid }: { uid: string | undefined }) {
                     console.log(err)
                 })
         }
+        else {
+            setUser(loginUser)
+        }
     }, [uid])
 
     useEffect(() => {
@@ -75,12 +79,13 @@ function MyProfile({ uid }: { uid: string | undefined }) {
         else {
             enqueueSnackbar("Update avatar fail", { variant: "error" })
         }
-
     }
-    if (!user) return <div>loading</div>
+    const handleStartConversation = async () => { }
+    if (!loginUser) return <div>loading</div >
     return (
         <MyProfileStyled>
             <Box className="profile-top">
+
                 <form className="profile_avatar-container">
                     <Avatar src={user.avatar} sx={{ width: 1, height: 1 }}></Avatar>
                     {uid ||
@@ -145,8 +150,17 @@ function MyProfile({ uid }: { uid: string | undefined }) {
                     :
                     // case login user is viewing other user's profile or wanna see his own profile by orther user's view
                     <Box>
-                        <Button onClick={handleAddFriend}>Add Friend</Button>
-                        <Button onClick={handleBlock}>Block</Button>
+                        <Box>
+                            <Tooltip title="Add friend">
+                                <IconButton onClick={handleAddFriend}><i className="fa-solid fa-plus"></i></IconButton>
+                            </Tooltip>
+                            <Tooltip title="Block">
+                                <IconButton onClick={handleBlock}><i className="fa-solid fa-ban"></i></IconButton>
+                            </Tooltip>
+                            <Tooltip title="Start conversation">
+                                <IconButton onClick={handleStartConversation}><i className="fa-regular fa-comment"></i></IconButton>
+                            </Tooltip>
+                        </Box>
                         <Box sx={{ margin: "10px 0 " }}>
                             <Typography >{`Create Date: ${moment(user.createdAt).format("DD/MM/YYYY")}`}</Typography>
                             <Typography >{`Last Active: ${moment(user.lastActive).fromNow()}`}</Typography>
@@ -163,7 +177,7 @@ function MyProfile({ uid }: { uid: string | undefined }) {
                                 </TableHead>
                                 <TableBody>
                                     {user.oldUsername.length === 0 && <Typography>Empty</Typography>}
-                                    {user.oldUsername.map((row, index) => (
+                                    {user.oldUsername.map((row: any, index: number) => (
                                         <TableRow
                                             key={index}
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}

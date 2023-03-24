@@ -3,6 +3,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import styled from "styled-components";
 import { headerHeight } from "../../constain/itemSize";
 import ConversationsContainer from "../core/ConversationsContainer";
+import FriendBox from "../core/FriendBox";
 import CreateConversation from "../form/CreateConversation";
 import Footer from "./Footer/Footer";
 import Header from "./Header/Header";
@@ -26,14 +27,15 @@ function Layout() {
           <ConversationsContainer />
 
         </Grid>
-        <Grid item xs={7}>
+        <Grid item xs={9}>
           <Outlet />
         </Grid>
-        <Grid item xs={2}>
-
-        </Grid>
+        {/* <Grid item xs={2}>
+          
+        </Grid> */}
 
       </Grid>
+      <FriendBox></FriendBox>
     </Main>
     {/* <Footer /> */}
   </div>

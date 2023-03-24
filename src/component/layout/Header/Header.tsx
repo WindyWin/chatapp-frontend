@@ -1,17 +1,20 @@
-import { Autocomplete, Avatar, Box, Button, CircularProgress, List, ListItem, Menu, MenuItem, TextField, Typography } from "@mui/material";
+import { Autocomplete, Avatar, Badge, Box, Button, CircularProgress, List, ListItem, Menu, MenuItem, TextField, Typography } from "@mui/material";
 import { getAuth } from "firebase/auth";
 import { MouseEvent, useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../modules/hook/reduxHook";
 import useDebounce from "../../../modules/hook/useDebounce";
 import { userSlice } from "../../../modules/redux/authSlice";
+import { selectNotifications } from "../../../modules/redux/notificationSlice";
 import { user } from "../../../modules/types";
 import { searchUser } from "../../../service/userService";
-import UserSearchItem from "../../core/UserSearchItem";
+import NotificationItem from "../../core/NotificationItem";
+import UserSearchItem from "../../core/UserItem";
 import { HeaderContainer } from "./HeaderStyles";
 
 function Header() {
   const user = useAppSelector(state => state.user.value)
+  const notification = useAppSelector(selectNotifications)
   const dispatch = useAppDispatch()
   const auth = getAuth()
   const navigate = useNavigate();
@@ -124,13 +127,29 @@ function Header() {
       </div>
       <div className="header__right">
         <div className="btn-container" >
-          <Button id="btn-nofi" onClick={setAnchoEl}><i className="fa-sharp fa-solid fa-bell"></i></Button>
+
+
+          <Button id="btn-nofi" onClick={setAnchoEl}>
+            <Badge badgeContent={notification.count === 0 ? "" : notification.count}>
+              <i className="fa-sharp fa-solid fa-bell"></i>
+            </Badge>
+          </Button>
+
         </div>
         <Menu id="Nofi-menu"
           anchorEl={anchorEl}
           open={openNofiMenu}
-          onClose={handleClose}>
-          <MenuItem>Nofi</MenuItem>
+          onClose={handleClose}
+          sx={{ maxHeight: "350px" }}
+        >
+          {
+            notification.isLoaded ? notification.value.map((noti, index) => (
+              <MenuItem key={index}>
+                <NotificationItem notification={noti}></NotificationItem>
+              </MenuItem>
+            )) : <MenuItem><CircularProgress size={20} /></MenuItem>
+          }
+          <MenuItem ><CircularProgress sx={{ margin: "0 auto" }} size={20} /></MenuItem>
         </Menu>
         <div className="btn-container">
           {/* @ts-ignore */}
@@ -141,7 +160,7 @@ function Header() {
           open={openSettingMenu}
           onClose={handleClose}>
           <MenuItem>Color theme</MenuItem>
-          <MenuItem><Link to="/profile/">Profile</Link></MenuItem>
+          <MenuItem><Link to="/profile">Profile</Link></MenuItem>
           <MenuItem onClick={logoutHandler}>
             <i style={{ marginRight: "1 rem" }} className="fa-solid fa-right-from-bracket"></i>
             <span >log out</span>
