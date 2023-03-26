@@ -17,9 +17,8 @@ const initialState: NotificationSlice = {
         type: "friend request",
         content: "You have a new friend request",
         isRead: true,
-        action: "accept",
-        createdAt: new Date(),
-        modifiedAt: new Date()
+        createdAt: new Date("2023-03-26T09:44:39.925Z"),
+        modifiedAt: new Date("2023-03-26T09:44:39.925Z"),
     }, {
         _id: "1",
         sender: "1",
@@ -27,9 +26,8 @@ const initialState: NotificationSlice = {
         type: "friend request",
         content: "You have a new friend request",
         isRead: false,
-        action: "accept",
-        createdAt: new Date(),
-        modifiedAt: new Date()
+        createdAt: new Date("2023-03-26T09:44:39.925Z"),
+        modifiedAt: new Date("2023-03-26T09:44:39.925Z"),
     }, {
         _id: "1",
         sender: "1",
@@ -37,9 +35,8 @@ const initialState: NotificationSlice = {
         type: "friend request",
         content: "You have a new friend request",
         isRead: false,
-        action: "accept",
-        createdAt: new Date(),
-        modifiedAt: new Date()
+        createdAt: new Date("2023-03-26T09:44:39.925Z"),
+        modifiedAt: new Date("2023-03-26T09:44:39.925Z"),
     }, {
         _id: "1",
         sender: "1",
@@ -47,9 +44,8 @@ const initialState: NotificationSlice = {
         type: "friend request",
         content: "You have a new friend request",
         isRead: false,
-        action: "accept",
-        createdAt: new Date(),
-        modifiedAt: new Date()
+        createdAt: new Date("2023-03-26T09:44:39.925Z"),
+        modifiedAt: new Date("2023-03-26T09:44:39.925Z"),
     }, {
         _id: "1",
         sender: "1",
@@ -57,9 +53,8 @@ const initialState: NotificationSlice = {
         type: "friend request",
         content: "You have a new friend request",
         isRead: false,
-        action: "accept",
-        createdAt: new Date(),
-        modifiedAt: new Date()
+        createdAt: new Date("2023-03-26T09:44:39.925Z"),
+        modifiedAt: new Date("2023-03-26T09:44:39.925Z"),
     }, {
         _id: "1",
         sender: "1",
@@ -67,9 +62,8 @@ const initialState: NotificationSlice = {
         type: "friend request",
         content: "You have a new friend request",
         isRead: false,
-        action: "accept",
-        createdAt: new Date(),
-        modifiedAt: new Date()
+        createdAt: new Date("2023-03-26T09:44:39.925Z"),
+        modifiedAt: new Date("2023-03-26T09:44:39.925Z"),
     }],
     count: 1,
     isLoaded: true,
@@ -100,6 +94,6 @@ export const notificationSlice = createSlice({
     }
 })
 
-export const { setNotifications } = notificationSlice.actions
+export const { setNotifications, addNewNotification } = notificationSlice.actions
 export const selectNotifications = (state: RootState) => state.notifications
 export default notificationSlice.reducer

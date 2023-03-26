@@ -3,6 +3,7 @@ import { Box } from "@mui/system"
 import moment from "moment"
 import { useSnackbar } from "notistack"
 import { useEffect, useRef, useState } from "react"
+import socket from "../../config/socket"
 import { useAppDispatch, useAppSelector } from "../../modules/hook/reduxHook"
 import { selectUser, setUser } from "../../modules/redux/authSlice"
 import { fileToDataUri } from "../../modules/utils"
@@ -35,8 +36,17 @@ function MyProfile({ uid }: { uid: string | undefined }) {
     const { enqueueSnackbar } = useSnackbar()
     const dispatch = useAppDispatch()
     const handleAddFriend = () => {
-        enqueueSnackbar("Add friend success", { variant: "success" })
-        enqueueSnackbar("Add friend fail", { variant: "error" })
+        socket.emit("add-friend",
+            {
+                sender: {
+                    uid: loginUser.uid,
+                    username: loginUser.username
+                },
+                receiverUid: uid
+            })
+
+        enqueueSnackbar("friend request send", { variant: "success" })
+        // enqueueSnackbar("Add friend fail", { variant: "error" })
     }
     const handleBlock = () => {
         enqueueSnackbar("Block success", { variant: "success" })
@@ -81,13 +91,13 @@ function MyProfile({ uid }: { uid: string | undefined }) {
         }
     }
     const handleStartConversation = async () => { }
-    if (!loginUser) return <div>loading</div >
+    if (!loginUser || !user) return <div>loading</div >
     return (
         <MyProfileStyled>
             <Box className="profile-top">
 
                 <form className="profile_avatar-container">
-                    <Avatar src={user.avatar} sx={{ width: 1, height: 1 }}></Avatar>
+                    <Avatar src={user?.avatar} sx={{ width: 1, height: 1 }}></Avatar>
                     {uid ||
                         <>
                             <label htmlFor="upload-avatar">

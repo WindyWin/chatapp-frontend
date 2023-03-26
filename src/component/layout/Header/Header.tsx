@@ -2,6 +2,7 @@ import { Autocomplete, Avatar, Badge, Box, Button, CircularProgress, List, ListI
 import { getAuth } from "firebase/auth";
 import { MouseEvent, useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import socket from "../../../config/socket";
 import { useAppDispatch, useAppSelector } from "../../../modules/hook/reduxHook";
 import useDebounce from "../../../modules/hook/useDebounce";
 import { userSlice } from "../../../modules/redux/authSlice";
@@ -47,6 +48,7 @@ function Header() {
   const logoutHandler = () => {
     //@ts-ignore
     // user.auth.signOut()
+    socket.emit("offline", { uid: user.uid })
     auth.signOut()
     dispatch(userSlice.actions.logOut)
   }

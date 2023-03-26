@@ -1,7 +1,10 @@
 import { Accordion, AccordionDetails, AccordionSummary, Box, Divider, Typography } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
+import { useAppSelector } from '../../modules/hook/reduxHook'
+import { selectUser } from '../../modules/redux/authSlice'
+import { user } from '../../modules/types'
 import FriendItem from './FriendItem'
 const fakeData = [
     {
@@ -319,6 +322,7 @@ const FriendBoxStyled = styled.div`
 
 function FriendBox() {
     const [expanded, setExpanded] = React.useState("");
+    const friendList: user[] = useAppSelector(selectUser)?.friendList ?? []
     const handleChange = (panel: string) => () => {
         setExpanded(panel === expanded ? '' : panel);
     };
@@ -326,6 +330,7 @@ function FriendBox() {
     const handleFriendClick = (uid: string) => () => {
         navigate(`/profile/${uid}`)
     }
+
     return (
         <FriendBoxStyled>
             <Accordion expanded={expanded !== ''} onChange={handleChange('Online')}>
@@ -336,18 +341,22 @@ function FriendBox() {
                 >
                     <Typography sx={{ width: '33%', flexShrink: 0 }}>Friend</Typography>
                     <Typography sx={{ color: 'text.secondary' }}>
-                        {`${fakeData.filter(item => item.status === "online").length} online/ ${fakeData.length}`}
+                        {`online ${friendList.filter(item => item.status === "online").length}/${friendList.length}`}
                     </Typography>
+
                 </AccordionSummary>
                 <AccordionDetails sx={{ maxHeight: "400px", overflowY: "scroll" }}>
                     {
-                        fakeData.sort((a, b) => b.status.localeCompare(a.status)).map((item, index) => {
+                        friendList.sort((a, b) => b.status.localeCompare(a.status)).map((item, index) => {
                             return <Box onClick={handleFriendClick(item.uid)} key={index} sx={{ padding: "5px" }}>
                                 {/* @ts-ignore */}
                                 <FriendItem user={item} />
                                 <Divider></Divider>
                             </Box>
                         })
+                    }
+                    {
+                        friendList.length === 0 && <Typography sx={{ color: "text.secondary" }}>go and get some fking friend</Typography>
                     }
                 </AccordionDetails>
             </Accordion>

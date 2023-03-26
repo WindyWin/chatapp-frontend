@@ -1,14 +1,14 @@
 import { getAuth } from 'firebase/auth';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import socket from '../../config/socket';
 import { getUserByUid, searchUser } from '../../service/userService';
 import { useAppDispatch, useAppSelector } from '../hook/reduxHook';
-import { setUser, userSlice } from '../redux/authSlice';
-
+import { setUser, updateFriendStatus, userSlice } from '../redux/authSlice';
+import { addNewNotification } from '../redux/notificationSlice';
 
 
 export default function AuthProtecter({ children }: any) {
-    const user = useAppSelector(state => state.user);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
@@ -23,6 +23,15 @@ export default function AuthProtecter({ children }: any) {
                 const { uid, email, refreshToken } = user;
                 getUserByUid(uid).then((res) => {
                     dispatch(setUser({ uid, email, refreshToken, ...res.data }));
+                    socket.emit("online", { uid: user.uid })
+                    socket.on("friend-status", ({ uid, status }) => {
+                        dispatch(updateFriendStatus({ uid, status }))
+                    })
+                    socket.on("new-notification", (data) => {
+                        dispatch(addNewNotification(data))
+                        console.log("new notification")
+                        console.table(data)
+                    })
                 })
                     .catch((err) => {
                         console.error(err);
@@ -42,7 +51,6 @@ export default function AuthProtecter({ children }: any) {
 
             // reset user info
 
-            console.log('reset');
             dispatch(userSlice.actions.logOut)
             localStorage.clear();
             navigate('/login');
@@ -50,13 +58,14 @@ export default function AuthProtecter({ children }: any) {
 
         return () => {
             unsubcribed();
+
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [auth]);
 
     return (
-        <div>
+        <>
             {children}
-        </div>
+        </>
     );
 }

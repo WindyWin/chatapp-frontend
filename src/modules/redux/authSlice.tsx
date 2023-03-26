@@ -27,11 +27,21 @@ export const userSlice = createSlice({
         },
         setUsername: (state, action: PayloadAction<string>) => {
             return { value: { ...state.value, username: action.payload } }
+        },
+        updateFriendStatus: (state, action: PayloadAction<{ uid: string, status: string }>) => {
+            const { uid, status } = action.payload;
+            const { friendList } = state.value;
+            const index = friendList.findIndex((friend: any) => friend.uid === uid);
+            if (index !== -1) {
+                friendList[index].status = status;
+            }
+            return { value: { ...state.value, friendList } }
         }
+
     },
 })
 
-export const { setUser, logOut, setUsername } = userSlice.actions
+export const { setUser, logOut, setUsername, updateFriendStatus } = userSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectUser = (state: RootState) => state.user.value

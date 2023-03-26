@@ -46,11 +46,11 @@ function ConversationSectionItem({ conversation }: { conversation: conversation 
 
     useEffect(() => {
 
-        socket.emit("join", { uid: user.uid, conversation: conversation._id })
+        socket.emit("join-conversation", { uid: user.uid, conversation: conversation._id })
 
 
         return () => {
-            socket.emit("leave", { uid: user.uid, conversation: conversation._id })
+            socket.emit("leave-conversation", { uid: user.uid, conversation: conversation._id })
         }
     }, [])
 

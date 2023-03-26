@@ -46,7 +46,6 @@ export interface notification {
     content: string;
     isRead: boolean;
     redirect?: string;
-    action?: string;
     createdAt: Date;
     modifiedAt: Date;
 }
