@@ -35,7 +35,7 @@ function ConversationsContainer() {
         if (user) {
             getConversation(user.uid).then(
                 (res) => {
-                    console.log(res.data)
+                    // console.log(res.data)
                     dispatch(setConversations(res.data))
                     dispatch(setLoading(false))
 

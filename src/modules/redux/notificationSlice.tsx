@@ -10,63 +10,9 @@ interface NotificationSlice {
 }
 
 const initialState: NotificationSlice = {
-    value: [{
-        _id: "1",
-        sender: "1",
-        receiver: "current user",
-        type: "friend request",
-        content: "You have a new friend request",
-        isRead: true,
-        createdAt: new Date("2023-03-26T09:44:39.925Z"),
-        modifiedAt: new Date("2023-03-26T09:44:39.925Z"),
-    }, {
-        _id: "1",
-        sender: "1",
-        receiver: "current user",
-        type: "friend request",
-        content: "You have a new friend request",
-        isRead: false,
-        createdAt: new Date("2023-03-26T09:44:39.925Z"),
-        modifiedAt: new Date("2023-03-26T09:44:39.925Z"),
-    }, {
-        _id: "1",
-        sender: "1",
-        receiver: "current user",
-        type: "friend request",
-        content: "You have a new friend request",
-        isRead: false,
-        createdAt: new Date("2023-03-26T09:44:39.925Z"),
-        modifiedAt: new Date("2023-03-26T09:44:39.925Z"),
-    }, {
-        _id: "1",
-        sender: "1",
-        receiver: "current user",
-        type: "friend request",
-        content: "You have a new friend request",
-        isRead: false,
-        createdAt: new Date("2023-03-26T09:44:39.925Z"),
-        modifiedAt: new Date("2023-03-26T09:44:39.925Z"),
-    }, {
-        _id: "1",
-        sender: "1",
-        receiver: "current user",
-        type: "friend request",
-        content: "You have a new friend request",
-        isRead: false,
-        createdAt: new Date("2023-03-26T09:44:39.925Z"),
-        modifiedAt: new Date("2023-03-26T09:44:39.925Z"),
-    }, {
-        _id: "1",
-        sender: "1",
-        receiver: "current user",
-        type: "friend request",
-        content: "You have a new friend request",
-        isRead: false,
-        createdAt: new Date("2023-03-26T09:44:39.925Z"),
-        modifiedAt: new Date("2023-03-26T09:44:39.925Z"),
-    }],
-    count: 1,
-    isLoaded: true,
+    value: [],
+    count: 0,
+    isLoaded: false,
     page: 1
 }
 export const notificationSlice = createSlice({
@@ -74,7 +20,10 @@ export const notificationSlice = createSlice({
     initialState,
     reducers: {
         setNotifications: (state, action: PayloadAction<notification[]>) => {
-            return { ...state, value: action.payload }
+            return { ...state, value: action.payload, count: action.payload.length }
+        },
+        setNotificationLoading: (state, action: PayloadAction<boolean>) => {
+            return { ...state, isLoaded: action.payload }
         },
         initNotifications: (state) => {
             return { ...state, isLoaded: true }
@@ -94,6 +43,6 @@ export const notificationSlice = createSlice({
     }
 })
 
-export const { setNotifications, addNewNotification } = notificationSlice.actions
+export const { setNotifications, addNewNotification, setNotificationLoading, updateNotification } = notificationSlice.actions
 export const selectNotifications = (state: RootState) => state.notifications
 export default notificationSlice.reducer

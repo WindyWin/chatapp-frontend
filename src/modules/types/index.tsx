@@ -40,7 +40,7 @@ export interface conversation {
 
 export interface notification {
     _id: string;
-    sender: string;
+    sender: user;
     receiver: string;
     type: "friend request" | "friend request accepted" | "friend request rejected" | "message" | "conversation invite" | "conversation invite accepted" | "conversation invite rejected";
     content: string;

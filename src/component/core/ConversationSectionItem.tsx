@@ -33,6 +33,7 @@ function ConversationSectionItem({ conversation }: { conversation: conversation 
     const user = useAppSelector(selectUser)
     const openOptionMenu = Boolean(anchorEl);
     const handleOpen = (event: any) => {
+        event.stopPropagation();
         setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
@@ -90,8 +91,8 @@ function ConversationSectionItem({ conversation }: { conversation: conversation 
                 anchorEl={anchorEl}
                 open={openOptionMenu}
                 onClose={handleClose}>
-                <MenuItem onClick={() => { setOpen({ leave: true, remove: false }) }}>Leave</MenuItem>
-                <MenuItem onClick={() => { setOpen({ leave: false, remove: true }) }}>Remove</MenuItem>
+                <MenuItem onClick={(e) => { e.stopPropagation(); setOpen({ leave: true, remove: false }) }}>Leave</MenuItem>
+                <MenuItem onClick={(e) => { e.stopPropagation(); setOpen({ leave: false, remove: true }) }}>Remove</MenuItem>
 
             </Menu>
             <Dialog

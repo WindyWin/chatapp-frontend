@@ -6,8 +6,9 @@ import socket from "../../../config/socket";
 import { useAppDispatch, useAppSelector } from "../../../modules/hook/reduxHook";
 import useDebounce from "../../../modules/hook/useDebounce";
 import { userSlice } from "../../../modules/redux/authSlice";
-import { selectNotifications } from "../../../modules/redux/notificationSlice";
+import { selectNotifications, setNotificationLoading, setNotifications } from "../../../modules/redux/notificationSlice";
 import { user } from "../../../modules/types";
+import { getNotifications } from "../../../service/notificationService";
 import { searchUser } from "../../../service/userService";
 import NotificationItem from "../../core/NotificationItem";
 import UserSearchItem from "../../core/UserItem";
@@ -26,8 +27,23 @@ function Header() {
   const openSettingMenu = Boolean(anchorEl?.id === "btn-setting");
   const openNofiMenu = Boolean(anchorEl?.id === "btn-nofi")
   const openSearchMenu = Boolean(anchorEl?.id === "input__search-user");
+  const [notificationPage, setNotificationPage] = useState(1)
 
   const debounced = useDebounce(searchValue, 700)
+
+  useEffect(() => {
+    if (user?.uid) {
+      dispatch(setNotificationLoading(true))
+
+      getNotifications({ uid: user.uid, page: notificationPage, limit: 10 }).then(res => {
+        console.log('res.data', res.data)
+        dispatch(setNotifications(res.data))
+        dispatch(setNotificationLoading(false))
+      })
+    }
+  }, [user])
+
+
   useEffect(() => {
     if (debounced.trim() === '')
       setSearchResult([])
@@ -132,7 +148,7 @@ function Header() {
 
 
           <Button id="btn-nofi" onClick={setAnchoEl}>
-            <Badge badgeContent={notification.count === 0 ? "" : notification.count}>
+            <Badge color="error" badgeContent={notification.count === 0 ? "" : notification.count}>
               <i className="fa-sharp fa-solid fa-bell"></i>
             </Badge>
           </Button>
@@ -144,12 +160,22 @@ function Header() {
           onClose={handleClose}
           sx={{ maxHeight: "350px" }}
         >
+          <MenuItem >
+
+            <Link to="/notification">
+              <Typography variant="caption">View all</Typography>
+            </Link>
+
+            <Typography onClick={() => { console.log("trigger mark all as read") }} variant="caption" sx={{ marginLeft: "auto" }}>Mark all as read</Typography>
+          </MenuItem>
           {
-            notification.isLoaded ? notification.value.map((noti, index) => (
+            // notification.isLoaded ?
+            notification.value.map((noti, index) => (
               <MenuItem key={index}>
                 <NotificationItem notification={noti}></NotificationItem>
               </MenuItem>
-            )) : <MenuItem><CircularProgress size={20} /></MenuItem>
+            ))
+            // : <MenuItem><CircularProgress size={20} /></MenuItem>  
           }
           <MenuItem ><CircularProgress sx={{ margin: "0 auto" }} size={20} /></MenuItem>
         </Menu>
