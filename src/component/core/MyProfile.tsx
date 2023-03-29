@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react"
 import socket from "../../config/socket"
 import { useAppDispatch, useAppSelector } from "../../modules/hook/reduxHook"
 import { selectUser, setUser } from "../../modules/redux/authSlice"
+import { user } from "../../modules/types"
 import { fileToDataUri } from "../../modules/utils"
 import { getUserByUid, updateUserAvatar } from "../../service/userService"
 import UpdatePassword from "../form/UpdatePassword"
@@ -161,9 +162,30 @@ function MyProfile({ uid }: { uid: string | undefined }) {
                     // case login user is viewing other user's profile or wanna see his own profile by orther user's view
                     <Box>
                         <Box>
-                            <Tooltip title="Add friend">
-                                <IconButton onClick={handleAddFriend}><i className="fa-solid fa-plus"></i></IconButton>
-                            </Tooltip>
+                            {
+                                loginUser.friendRequest.some((item: user) => item.uid === uid) &&
+                                <>
+                                    <Tooltip title="Accept friend request">
+                                        <IconButton><i className="fa-solid fa-check" style={{ color: "green" }}></i> </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title="Reject friend request">
+                                        <IconButton><i className="fa-solid fa-x" style={{ color: "red" }}></i> </IconButton>
+                                    </Tooltip>
+                                </>
+                            }
+                            {
+                                (!loginUser.friendRequest.some((item: user) => item.uid === uid)
+                                    && !user.friendList.some((item: user) => item.uid === uid)) &&
+                                <Tooltip title="Add friend">
+                                    <IconButton onClick={handleAddFriend}><i className="fa-solid fa-user-plus"></i></IconButton>
+                                </Tooltip>
+                            }
+                            {
+                                user.friendList.some((item: user) => item.uid === uid) &&
+                                <Tooltip title="Remove friend">
+                                    <IconButton><i className="fa-solid fa-user-minus"></i></IconButton>
+                                </Tooltip>
+                            }
                             <Tooltip title="Block">
                                 <IconButton onClick={handleBlock}><i className="fa-solid fa-ban"></i></IconButton>
                             </Tooltip>
@@ -173,7 +195,10 @@ function MyProfile({ uid }: { uid: string | undefined }) {
                         </Box>
                         <Box sx={{ margin: "10px 0 " }}>
                             <Typography >{`Create Date: ${moment(user.createdAt).format("DD/MM/YYYY")}`}</Typography>
-                            <Typography >{`Last Active: ${moment(user.lastActive).fromNow()}`}</Typography>
+                            {
+                                user.status === "offline" &&
+                                <Typography >{`Last Active: ${moment(user.lastActive).fromNow()}`}</Typography>
+                            }
                         </Box>
                         <Typography variant="h6">Old Username</Typography>
                         {/* i will update the tab later */}
@@ -186,7 +211,12 @@ function MyProfile({ uid }: { uid: string | undefined }) {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {user.oldUsername.length === 0 && <Typography>Empty</Typography>}
+                                    {user.oldUsername.length === 0 &&
+                                        <TableRow>
+                                            <TableCell colSpan={2}>
+                                                <Typography>Empty</Typography>
+                                            </TableCell>
+                                        </TableRow>}
                                     {user.oldUsername.map((row: any, index: number) => (
                                         <TableRow
                                             key={index}

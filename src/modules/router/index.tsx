@@ -1,19 +1,32 @@
-import { Children } from "react";
 import { createBrowserRouter, Outlet } from "react-router-dom";
 import Layout from "../../component/layout";
 import AuthProtecter from "../context/AuthProvider";
 import { Chat, Home, Login, NotFound, Profile, Register } from "../page";
 
+import ColorModeProvider from "../context/ColorModeContext";
+
+
+
+
+
+
+
+
 const AuthLayout = () => {
+
   return (
     <AuthProtecter>
-      <Outlet />
+      <ColorModeProvider>
+        <Outlet />
+      </ColorModeProvider>
     </AuthProtecter >
   )
 }
 const ClientLayout = () => {
   return (
+
     <Layout />
+
   )
 }
 const router = createBrowserRouter([

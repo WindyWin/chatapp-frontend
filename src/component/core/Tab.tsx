@@ -1,7 +1,6 @@
-import { Box } from '@mui/material'
-import { FC, useState } from 'react'
+import { useTheme } from '@mui/material'
+import { useState } from 'react'
 import styled from 'styled-components'
-import { mainBgColor, subBgColor } from '../../constain/color'
 
 interface tabItem {
     name: string,
@@ -16,15 +15,15 @@ const TabStyled = styled.div`
     
     .tab_header {
         display:flex;
-        border:1px solid ${subBgColor};
+        border:1px solid ${props => props.theme.palette.divider};
         width:fit-content;
         .tab_header-item {
             padding:10px;
             cursor: pointer;
-            background-color: ${subBgColor};
+            background-color: ${props => props.theme.palette.divider};
         }
         .tab_header-item.active{
-            background-color: ${mainBgColor};
+            background-color: ${props => props.theme.palette.background.paper};
             
         }
 
@@ -33,7 +32,7 @@ const TabStyled = styled.div`
         padding:10px;
         max-width:100%;
         width:600px;
-        border:1px solid ${subBgColor};
+        border:1px solid ${props => props.theme.palette.divider};
         box-shadow: 0 0 7px 0 rgba(0,0,0,0.2);
     }
 `
@@ -41,9 +40,10 @@ const TabStyled = styled.div`
 
 
 function Tab({ tabItems }: { tabItems: tabItem[] }) {
+    const theme = useTheme();
     const [activeTab, setActiveTab] = useState(0)
     return (
-        <TabStyled>
+        <TabStyled theme={theme}>
             <div className="tab_header">
                 {tabItems.map((item, index) => (
                     <div

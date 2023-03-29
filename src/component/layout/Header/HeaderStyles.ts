@@ -7,7 +7,7 @@ export const HeaderContainer = styled.header`
     justify-content:space-between;
     align-items: center;
     height: ${headerHeight}px;
-    box-shadow: 0px 1px 3px ${subColor};
+    box-shadow: 0px 1px 3px ${props => props.theme.shadowColor};
     & .header__left,& .header__right{
         width:300px;
         display:flex;
@@ -29,11 +29,11 @@ export const HeaderContainer = styled.header`
         z-index: 1;
         top: 57px;
         left:0;
-        background-color: ${mainBgColor};
+        background-color: ${props => props.theme.background};
         max-height:400px;
         width:100%;
         overflow-y:hidden;
-        border:1px solid ${subBgColor};
+        border:1px solid ${props => props.theme.shadowColor};
         border-top:none;
         .overlay{
             position:fixed;

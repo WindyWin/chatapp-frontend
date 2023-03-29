@@ -111,6 +111,7 @@ function Conversation({ conversationId }: { conversationId: string | undefined }
             console.log('scroll to top')
             const length = conversation?.messages?.length || 0;
             const maxMessage = conversation?.messageCount || 0;
+            // only load more message if current message length < max message length and not loading message
             if (length < maxMessage && !loading) {
                 let page = conversation?.page;
                 setLoading(true)

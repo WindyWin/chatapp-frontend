@@ -1,4 +1,4 @@
-import { Avatar, Box, CircularProgress, Tooltip, Typography } from "@mui/material"
+import { Avatar, Box, CircularProgress, Tooltip, Typography, useTheme } from "@mui/material"
 import moment from "moment"
 import { memo, useMemo } from "react"
 import { Link } from "react-router-dom"
@@ -12,6 +12,7 @@ function MessagesContainer(
     { messages, loading, maxMessagesLength }: { messages: message[], loading: boolean, maxMessagesLength: number }
 ) {
     const curentUser = useAppSelector(selectUser)
+    const theme = useTheme();
     const length = messages.length;
     if (loading)
         return <Box>
@@ -51,7 +52,7 @@ function MessagesContainer(
                                 <Link to={`/profile/${item.user?.uid}`}><Avatar src={item.user?.avatar}></Avatar></Link>
                             </Tooltip>
                             <Tooltip title={moment(item.createdAt).format("LLL")} placement="top">
-                                <Box sx={{ display: "flex", alignItems: "center", padding: "10px", backgroundColor: subBgColor, maxWidth: "50%", marginLeft: "5px", borderRadius: "5px" }}
+                                <Box sx={{ display: "flex", alignItems: "center", padding: "10px", backgroundColor: theme.palette.divider, maxWidth: "50%", marginLeft: "5px", borderRadius: "5px" }}
                                 ><Typography>{item.message}</Typography></Box>
                             </Tooltip>
                         </Box>
@@ -61,7 +62,7 @@ function MessagesContainer(
                     return (
                         <Box sx={{ display: "flex", marginBottom: "10px", justifyContent: "flex-end" }} key={index} className="message-container">
                             <Tooltip title={moment(item.createdAt).format("LLL")} placement="top">
-                                <Box sx={{ display: "flex", alignItems: "center", padding: "10px", backgroundColor: subBgColor, maxWidth: "50%", marginLeft: "5px", borderRadius: "5px" }}
+                                <Box sx={{ display: "flex", alignItems: "center", padding: "10px", backgroundColor: theme.palette.divider, maxWidth: "50%", marginLeft: "5px", borderRadius: "5px" }}
                                 ><Typography>{item.message}</Typography></Box>
                             </Tooltip>
                         </Box>)

@@ -21,7 +21,7 @@ export const conversationSlice = createSlice({
     reducers: {
         setConversations: (state, action: PayloadAction<conversation[]>) => {
             const conversations = action.payload.map((conversation) => { return { ...conversation, messageInit: false, page: 1 } });
-            return { ...state, value: conversations }
+            return { ...state, value: conversations, loading: true }
         },
         addConversation: (state, action: PayloadAction<conversation>) => {
             return { ...state, value: [action.payload, ...state.value] }

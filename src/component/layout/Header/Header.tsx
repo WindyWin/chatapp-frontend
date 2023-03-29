@@ -1,22 +1,24 @@
-import { Autocomplete, Avatar, Badge, Box, Button, CircularProgress, List, ListItem, Menu, MenuItem, TextField, Typography } from "@mui/material";
+import { Avatar, Badge, Box, Button, CircularProgress, List, ListItem, Menu, MenuItem, TextField, Typography, useTheme } from "@mui/material";
 import { getAuth } from "firebase/auth";
-import { MouseEvent, useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import socket from "../../../config/socket";
 import { useAppDispatch, useAppSelector } from "../../../modules/hook/reduxHook";
 import useDebounce from "../../../modules/hook/useDebounce";
 import { userSlice } from "../../../modules/redux/authSlice";
-import { selectNotifications, setNotificationLoading, setNotifications } from "../../../modules/redux/notificationSlice";
+import { readAllNotificationsAction, selectNotifications, setNotificationLoading, setNotifications } from "../../../modules/redux/notificationSlice";
 import { user } from "../../../modules/types";
-import { getNotifications } from "../../../service/notificationService";
+import { getNotifications, readAllNotifications } from "../../../service/notificationService";
 import { searchUser } from "../../../service/userService";
 import NotificationItem from "../../core/NotificationItem";
+import ThemeToggle from "../../core/ThemeToggle";
 import UserSearchItem from "../../core/UserItem";
 import { HeaderContainer } from "./HeaderStyles";
 
 function Header() {
   const user = useAppSelector(state => state.user.value)
   const notification = useAppSelector(selectNotifications)
+  const theme = useTheme();
   const dispatch = useAppDispatch()
   const auth = getAuth()
   const navigate = useNavigate();
@@ -78,7 +80,15 @@ function Header() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
+  const handleReadAllNoti = () => {
+    console.log("trigger mark all as read")
+    readAllNotifications(user.uid).then(res => {
+      console.log(res)
+      readAllNotifications(user.uid).then(res => {
+        dispatch(readAllNotificationsAction())
+      })
+    })
+  }
   const SearchResultPopup = () => (
     <Box id="Search-menu"
       hidden={!openSearchMenu}
@@ -115,7 +125,7 @@ function Header() {
   )
 
   return (
-    <HeaderContainer>
+    <HeaderContainer theme={theme}>
       <div className="header__left">
         <Link to="/">
           Logo
@@ -160,14 +170,16 @@ function Header() {
           onClose={handleClose}
           sx={{ maxHeight: "350px" }}
         >
-          <MenuItem >
-
-            <Link to="/notification">
-              <Typography variant="caption">View all</Typography>
-            </Link>
-
-            <Typography onClick={() => { console.log("trigger mark all as read") }} variant="caption" sx={{ marginLeft: "auto" }}>Mark all as read</Typography>
-          </MenuItem>
+          <Box sx={{ padding: "0 10px", display: "flex", justifyContent: "space-between" }}>
+            <Button variant="text">
+              <Link to="/notification">
+                <Typography variant="caption">View all</Typography>
+              </Link>
+            </Button>
+            <Button onClick={handleReadAllNoti} variant="text">
+              <Typography onClick={() => { console.log("trigger mark all as read") }} variant="caption" sx={{ marginLeft: "auto" }}>Mark all as read</Typography>
+            </Button>
+          </Box>
           {
             // notification.isLoaded ?
             notification.value.map((noti, index) => (
@@ -187,7 +199,9 @@ function Header() {
           anchorEl={anchorEl}
           open={openSettingMenu}
           onClose={handleClose}>
-          <MenuItem>Color theme</MenuItem>
+          <MenuItem>
+            <ThemeToggle />
+          </MenuItem>
           <MenuItem><Link to="/profile">Profile</Link></MenuItem>
           <MenuItem onClick={logoutHandler}>
             <i style={{ marginRight: "1 rem" }} className="fa-solid fa-right-from-bracket"></i>

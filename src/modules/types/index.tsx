@@ -25,6 +25,7 @@ export interface message {
 export interface conversation {
     _id?: String;
     users: user[];
+    admin: user[];
     name: String;
     image: String;
     createdAt?: Date;

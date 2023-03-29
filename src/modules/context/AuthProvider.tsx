@@ -24,9 +24,7 @@ export default function AuthProtecter({ children }: any) {
                 getUserByUid(uid).then((res) => {
                     dispatch(setUser({ uid, email, refreshToken, ...res.data }));
                     socket.emit("online", { uid: user.uid })
-                    socket.on("friend-status", ({ uid, status }) => {
-                        dispatch(updateFriendStatus({ uid, status }))
-                    })
+
                     socket.on("new-notification", (data) => {
                         dispatch(addNewNotification(data))
                         console.log("new notification")

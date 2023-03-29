@@ -1,15 +1,14 @@
-import { Avatar, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Menu, MenuItem, Typography } from "@mui/material"
+import { Avatar, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Menu, MenuItem, Typography, useTheme } from "@mui/material"
 import moment from "moment"
 import { useSnackbar } from "notistack"
 import { useEffect, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
 import styled from "styled-components"
 import socket from "../../config/socket"
-import { borderColor, subBgColor } from "../../constain/color"
+import { borderColor } from "../../constain/color"
 import { useAppDispatch, useAppSelector } from "../../modules/hook/reduxHook"
 import { selectUser } from "../../modules/redux/authSlice"
-import { addNewMessage, removeConversation } from "../../modules/redux/conversationSlice"
-import { conversation, message } from "../../modules/types"
+import { removeConversation } from "../../modules/redux/conversationSlice"
+import { conversation } from "../../modules/types"
 const StyledConveration = styled.div`
     padding: 10px;
     display:flex;
@@ -18,14 +17,15 @@ const StyledConveration = styled.div`
     cursor: pointer;
     width: 100%;
     margin-bottom: 1px;
-    border-bottom: 1px solid ${borderColor};
+    border-bottom: 1px solid ${props => props.theme.palette.divider};
     
     &:hover{
-        background-color: ${subBgColor};
+        background-color: ${props => props.theme.palette.action.hover};
     }
 `
 
 function ConversationSectionItem({ conversation }: { conversation: conversation }) {
+    const theme = useTheme();
     const [anchorEl, setAnchorEl] = useState(null);
     const [open, setOpen] = useState({ leave: false, remove: false })
     const { enqueueSnackbar } = useSnackbar();
@@ -73,7 +73,7 @@ function ConversationSectionItem({ conversation }: { conversation: conversation 
 
     return (
         // <Link to={`/conversation/${conversation._id}`}>
-        <StyledConveration   >
+        <StyledConveration theme={theme}   >
             {/* @ts-ignore */}
             <Avatar sx={{ marginRight: "1rem" }} src={conversation.image || ""}>{conversation.name[0]}</Avatar>
             <Box className="conversation-info" sx={{ width: 1, marginRight: "1rem" }}>

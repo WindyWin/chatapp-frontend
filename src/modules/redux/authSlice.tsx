@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
+import { user } from "../types"
 import type { RootState } from './store'
 
 
@@ -11,7 +12,19 @@ interface AuthSlice {
 
 // Define the initial state using that type
 const initialState: AuthSlice = {
-    value: null
+    value: {
+        uid: null,
+        username: "loading",
+        email: "loading",
+        avatar: undefined,
+        friendList: [],
+        status: "offline",
+        blockList: [],
+        oldUsername: [],
+        friendRequest: []
+
+
+    }
 }
 
 export const userSlice = createSlice({
@@ -30,12 +43,14 @@ export const userSlice = createSlice({
         },
         updateFriendStatus: (state, action: PayloadAction<{ uid: string, status: string }>) => {
             const { uid, status } = action.payload;
-            const { friendList } = state.value;
-            const index = friendList.findIndex((friend: any) => friend.uid === uid);
-            if (index !== -1) {
-                friendList[index].status = status;
-            }
-            return { value: { ...state.value, friendList } }
+            const friendList = state.value.friendList.map((user: user): user => {
+                return {
+                    ...user,
+                    status: user.uid === uid ? status : user.status
+                }
+            })
+            const lastactive = new Date().toJSON()
+            return { value: { ...state.value, friendList, lastactive } }
         }
 
     },

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { user } from '../../modules/types'
 
-const UserSearchItemStyle = styled.div`
+const UserItemStyle = styled.div`
     display:flex;
     align-items:center;
     justify-content: start;
@@ -16,21 +16,21 @@ const UserSearchItemStyle = styled.div`
     width:100%;
 `
 
-function UserSearchItem({ user }: { user: user }) {
+function UserItem({ user }: { user: user }) {
     const navigate = useNavigate()
     const handleClick = () => {
         navigate(`/profile/${user.uid}`)
     }
     return (
-        <UserSearchItemStyle onClick={handleClick} className="user-search-item" >
+        <UserItemStyle onClick={handleClick} className="user-search-item" >
             <Avatar src={user.avatar} ></Avatar>
             <div className="item-info">
                 <div className="item-info__username">{user.username}</div>
                 <div className="item-info__email">{user.email}</div>
             </div>
-        </UserSearchItemStyle>
+        </UserItemStyle>
 
     )
 }
 
-export default UserSearchItem
+export default UserItem

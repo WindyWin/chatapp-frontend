@@ -39,10 +39,16 @@ export const notificationSlice = createSlice({
                 return notification
             })
             return { ...state, value: notifications }
+        },
+        readAllNotificationsAction: (state) => {
+            const notifications = state.value.map((notification) => {
+                return { ...notification, isRead: true }
+            })
+            return { ...state, value: notifications, count: 0 }
         }
     }
 })
 
-export const { setNotifications, addNewNotification, setNotificationLoading, updateNotification } = notificationSlice.actions
+export const { setNotifications, addNewNotification, setNotificationLoading, updateNotification, readAllNotificationsAction } = notificationSlice.actions
 export const selectNotifications = (state: RootState) => state.notifications
 export default notificationSlice.reducer
